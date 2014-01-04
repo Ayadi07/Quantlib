@@ -1,0 +1,94 @@
+﻿Build started 1/4/2014 4:45:25 PM.
+     1>Project "C:\Users\Ahmed\Documents\Visual Studio 2012\Projects\ConsoleApplication3\ConsoleApplication3\ConsoleApplication3.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt PartialTimeBarrierOption.cpp
+         PartialTimeBarrierOption.cpp
+     1>c:\program files (x86)\microsoft visual studio 11.0\vc\include\xutility(2176): warning C4996: 'std::_Copy_impl': Function call with parameters that may be unsafe - this call relies on the caller to check that the passed values are correct. To disable this warning, use -D_SCL_SECURE_NO_WARNINGS. See documentation on how to use Visual C++ 'Checked Iterators'
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\xutility(2157) : see declaration of 'std::_Copy_impl'
+                 c:\users\ahmed\documents\imafa\pfe\quantlib-1.3\ql\math\array.hpp(229) : see reference to function template instantiation '_OutIt std::copy<QuantLib::Array::const_iterator,QuantLib::Array::iterator>(_InIt,_InIt,_OutIt)' being compiled
+                 with
+                 [
+                     _OutIt=QuantLib::Array::iterator,
+                     _InIt=QuantLib::Array::const_iterator
+                 ]
+     1>c:\program files (x86)\microsoft visual studio 11.0\vc\include\xutility(3017): warning C4996: 'std::_Equal1': Function call with parameters that may be unsafe - this call relies on the caller to check that the passed values are correct. To disable this warning, use -D_SCL_SECURE_NO_WARNINGS. See documentation on how to use Visual C++ 'Checked Iterators'
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\xutility(3002) : see declaration of 'std::_Equal1'
+                 c:\users\ahmed\documents\imafa\pfe\quantlib-1.3\ql\math\array.hpp(290) : see reference to function template instantiation 'bool std::equal<QuantLib::Array::const_iterator,QuantLib::Array::const_iterator>(_InIt1,_InIt1,_InIt2)' being compiled
+                 with
+                 [
+                     _InIt1=QuantLib::Array::const_iterator,
+                     _InIt2=QuantLib::Array::const_iterator
+                 ]
+     1>c:\program files (x86)\microsoft visual studio 11.0\vc\include\algorithm(1207): warning C4996: 'std::_Transform2': Function call with parameters that may be unsafe - this call relies on the caller to check that the passed values are correct. To disable this warning, use -D_SCL_SECURE_NO_WARNINGS. See documentation on how to use Visual C++ 'Checked Iterators'
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\algorithm(1185) : see declaration of 'std::_Transform2'
+                 c:\users\ahmed\documents\imafa\pfe\quantlib-1.3\ql\math\array.hpp(307) : see reference to function template instantiation '_OutIt std::transform<QuantLib::Array::iterator,QuantLib::Array::const_iterator,QuantLib::Array::iterator,std::plus<_Ty>>(_InIt1,_InIt1,_InIt2,_OutIt,_Fn2)' being compiled
+                 with
+                 [
+                     _OutIt=QuantLib::Array::iterator,
+                     _Ty=QuantLib::Real,
+                     _InIt1=QuantLib::Array::iterator,
+                     _InIt2=QuantLib::Array::const_iterator,
+                     _Fn2=std::plus<QuantLib::Real>
+                 ]
+     1>c:\program files (x86)\microsoft visual studio 11.0\vc\include\algorithm(1066): warning C4996: 'std::_Transform1': Function call with parameters that may be unsafe - this call relies on the caller to check that the passed values are correct. To disable this warning, use -D_SCL_SECURE_NO_WARNINGS. See documentation on how to use Visual C++ 'Checked Iterators'
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\algorithm(1047) : see declaration of 'std::_Transform1'
+                 c:\users\ahmed\documents\imafa\pfe\quantlib-1.3\ql\math\array.hpp(314) : see reference to function template instantiation '_OutIt std::transform<QuantLib::Array::iterator,QuantLib::Array::iterator,std::binder2nd<_Fn2>>(_InIt,_InIt,_OutIt,_Fn1)' being compiled
+                 with
+                 [
+                     _OutIt=QuantLib::Array::iterator,
+                     _Fn2=std::plus<QuantLib::Real>,
+                     _InIt=QuantLib::Array::iterator,
+                     _Fn1=std::binder2nd<std::plus<QuantLib::Real>>
+                 ]
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\algorithm(1185) : see declaration of 'std::_Transform2'
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\algorithm(1047) : see declaration of 'std::_Transform1'
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\algorithm(1185) : see declaration of 'std::_Transform2'
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\algorithm(1047) : see declaration of 'std::_Transform1'
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\algorithm(1185) : see declaration of 'std::_Transform2'
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\algorithm(1047) : see declaration of 'std::_Transform1'
+     1>c:\program files (x86)\microsoft visual studio 11.0\vc\include\numeric(108): warning C4996: 'std::_Inner_product1': Function call with parameters that may be unsafe - this call relies on the caller to check that the passed values are correct. To disable this warning, use -D_SCL_SECURE_NO_WARNINGS. See documentation on how to use Visual C++ 'Checked Iterators'
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\numeric(92) : see declaration of 'std::_Inner_product1'
+                 c:\users\ahmed\documents\imafa\pfe\quantlib-1.3\ql\math\array.hpp(475) : see reference to function template instantiation '_Ty std::inner_product<QuantLib::Array::const_iterator,QuantLib::Array::const_iterator,double>(_InIt1,_InIt1,_InIt2,_Ty)' being compiled
+                 with
+                 [
+                     _Ty=double,
+                     _InIt1=QuantLib::Array::const_iterator,
+                     _InIt2=QuantLib::Array::const_iterator
+                 ]
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\algorithm(1047) : see declaration of 'std::_Transform1'
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\algorithm(1185) : see declaration of 'std::_Transform2'
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\algorithm(1047) : see declaration of 'std::_Transform1'
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\algorithm(1047) : see declaration of 'std::_Transform1'
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\algorithm(1185) : see declaration of 'std::_Transform2'
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\algorithm(1047) : see declaration of 'std::_Transform1'
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\algorithm(1047) : see declaration of 'std::_Transform1'
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\algorithm(1185) : see declaration of 'std::_Transform2'
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\algorithm(1047) : see declaration of 'std::_Transform1'
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\algorithm(1047) : see declaration of 'std::_Transform1'
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\algorithm(1185) : see declaration of 'std::_Transform2'
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\algorithm(1047) : see declaration of 'std::_Transform1'
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\algorithm(1047) : see declaration of 'std::_Transform1'
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\algorithm(1047) : see declaration of 'std::_Transform1'
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\algorithm(1047) : see declaration of 'std::_Transform1'
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\numeric(92) : see declaration of 'std::_Inner_product1'
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\xutility(2157) : see declaration of 'std::_Copy_impl'
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Ahmed\Documents\Visual Studio 2012\Projects\ConsoleApplication3\Debug\PartialTimeBarrierOption.exe" /INCREMENTAL /NOLOGO /LIBPATH:"C:\Users\Ahmed\Documents\IMAFA\PFE\QuantLib-1.3\lib" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Ahmed\Documents\Visual Studio 2012\Projects\ConsoleApplication3\Debug\PartialTimeBarrierOption.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Ahmed\Documents\Visual Studio 2012\Projects\ConsoleApplication3\Debug\PartialTimeBarrierOption.lib" /MACHINE:X86 Debug\PartialTimeBarrierOption.obj
+     1>PartialTimeBarrierOption.obj : error LNK2019: unresolved external symbol "void __cdecl boost::assertion_failed(char const *,char const *,char const *,long)" (?assertion_failed@boost@@YAXPBD00J@Z) referenced in function "public: class QuantLib::Exercise * __thiscall boost::shared_ptr<class QuantLib::Exercise>::operator->(void)const " (??C?$shared_ptr@VExercise@QuantLib@@@boost@@QBEPAVExercise@QuantLib@@XZ)
+     1>PartialTimeBarrierOption.obj : error LNK2019: unresolved external symbol "public: __thiscall QuantLib::Error::Error(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &,long,class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &,class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &)" (??0Error@QuantLib@@QAE@ABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@J00@Z) referenced in function "public: double __thiscall QuantLib::PartialTimeBarrierOption::impliedVolatility(double,class boost::shared_ptr<class QuantLib::GeneralizedBlackScholesProcess> const &,double,unsigned int,double,double)const " (?impliedVolatility@PartialTimeBarrierOption@QuantLib@@QBENNABV?$shared_ptr@VGeneralizedBlackScholesProcess@QuantLib@@@boost@@NINN@Z)
+     1>PartialTimeBarrierOption.obj : error LNK2001: unresolved external symbol "public: virtual char const * __thiscall QuantLib::Error::what(void)const " (?what@Error@QuantLib@@UBEPBDXZ)
+     1>PartialTimeBarrierOption.obj : error LNK2019: unresolved external symbol "public: __thiscall QuantLib::Date::Date(void)" (??0Date@QuantLib@@QAE@XZ) referenced in function "public: __thiscall QuantLib::Null<class QuantLib::Date>::operator class QuantLib::Date(void)const " (??B?$Null@VDate@QuantLib@@@QuantLib@@QBE?AVDate@1@XZ)
+     1>PartialTimeBarrierOption.obj : error LNK2019: unresolved external symbol "public: __thiscall QuantLib::OneAssetOption::OneAssetOption(class boost::shared_ptr<class QuantLib::Payoff> const &,class boost::shared_ptr<class QuantLib::Exercise> const &)" (??0OneAssetOption@QuantLib@@QAE@ABV?$shared_ptr@VPayoff@QuantLib@@@boost@@ABV?$shared_ptr@VExercise@QuantLib@@@3@@Z) referenced in function "public: __thiscall QuantLib::PartialTimeBarrierOption::PartialTimeBarrierOption(enum QuantLib::Barrier::Type,double,double,class QuantLib::Date,class boost::shared_ptr<class QuantLib::StrikedTypePayoff> const &,class boost::shared_ptr<class QuantLib::Exercise> const &)" (??0PartialTimeBarrierOption@QuantLib@@QAE@W4Type@Barrier@1@NNVDate@1@ABV?$shared_ptr@VStrikedTypePayoff@QuantLib@@@boost@@ABV?$shared_ptr@VExercise@QuantLib@@@6@@Z)
+     1>PartialTimeBarrierOption.obj : error LNK2001: unresolved external symbol "public: virtual bool __thiscall QuantLib::OneAssetOption::isExpired(void)const " (?isExpired@OneAssetOption@QuantLib@@UBE_NXZ)
+     1>PartialTimeBarrierOption.obj : error LNK2001: unresolved external symbol "public: virtual void __thiscall QuantLib::OneAssetOption::fetchResults(class QuantLib::PricingEngine::results const *)const " (?fetchResults@OneAssetOption@QuantLib@@UBEXPBVresults@PricingEngine@2@@Z)
+     1>PartialTimeBarrierOption.obj : error LNK2001: unresolved external symbol "protected: virtual void __thiscall QuantLib::OneAssetOption::setupExpired(void)const " (?setupExpired@OneAssetOption@QuantLib@@MBEXXZ)
+     1>PartialTimeBarrierOption.obj : error LNK2019: unresolved external symbol "public: static double __cdecl QuantLib::detail::ImpliedVolatilityHelper::calculate(class QuantLib::Instrument const &,class QuantLib::PricingEngine const &,class QuantLib::SimpleQuote &,double,double,unsigned int,double,double)" (?calculate@ImpliedVolatilityHelper@detail@QuantLib@@SANABVInstrument@3@ABVPricingEngine@3@AAVSimpleQuote@3@NNINN@Z) referenced in function "public: double __thiscall QuantLib::PartialTimeBarrierOption::impliedVolatility(double,class boost::shared_ptr<class QuantLib::GeneralizedBlackScholesProcess> const &,double,unsigned int,double,double)const " (?impliedVolatility@PartialTimeBarrierOption@QuantLib@@QBENNABV?$shared_ptr@VGeneralizedBlackScholesProcess@QuantLib@@@boost@@NINN@Z)
+     1>PartialTimeBarrierOption.obj : error LNK2019: unresolved external symbol "public: static class boost::shared_ptr<class QuantLib::GeneralizedBlackScholesProcess> __cdecl QuantLib::detail::ImpliedVolatilityHelper::clone(class boost::shared_ptr<class QuantLib::GeneralizedBlackScholesProcess> const &,class boost::shared_ptr<class QuantLib::SimpleQuote> const &)" (?clone@ImpliedVolatilityHelper@detail@QuantLib@@SA?AV?$shared_ptr@VGeneralizedBlackScholesProcess@QuantLib@@@boost@@ABV45@ABV?$shared_ptr@VSimpleQuote@QuantLib@@@5@@Z) referenced in function "public: double __thiscall QuantLib::PartialTimeBarrierOption::impliedVolatility(double,class boost::shared_ptr<class QuantLib::GeneralizedBlackScholesProcess> const &,double,unsigned int,double,double)const " (?impliedVolatility@PartialTimeBarrierOption@QuantLib@@QBENNABV?$shared_ptr@VGeneralizedBlackScholesProcess@QuantLib@@@boost@@NINN@Z)
+     1>PartialTimeBarrierOption.obj : error LNK2019: unresolved external symbol "public: __thiscall QuantLib::AnalyticBarrierEngine::AnalyticBarrierEngine(class boost::shared_ptr<class QuantLib::GeneralizedBlackScholesProcess> const &)" (??0AnalyticBarrierEngine@QuantLib@@QAE@ABV?$shared_ptr@VGeneralizedBlackScholesProcess@QuantLib@@@boost@@@Z) referenced in function "public: double __thiscall QuantLib::PartialTimeBarrierOption::impliedVolatility(double,class boost::shared_ptr<class QuantLib::GeneralizedBlackScholesProcess> const &,double,unsigned int,double,double)const " (?impliedVolatility@PartialTimeBarrierOption@QuantLib@@QBENNABV?$shared_ptr@VGeneralizedBlackScholesProcess@QuantLib@@@boost@@NINN@Z)
+     1>MSVCRTD.lib(crtexe.obj) : error LNK2019: unresolved external symbol _main referenced in function ___tmainCRTStartup
+     1>C:\Users\Ahmed\Documents\Visual Studio 2012\Projects\ConsoleApplication3\Debug\PartialTimeBarrierOption.exe : fatal error LNK1120: 12 unresolved externals
+     1>Done Building Project "C:\Users\Ahmed\Documents\Visual Studio 2012\Projects\ConsoleApplication3\ConsoleApplication3\ConsoleApplication3.vcxproj" (Build target(s)) -- FAILED.
+
+Build FAILED.
+
+Time Elapsed 00:00:06.81
