@@ -33,5 +33,7 @@ namespace QuantLib {
 		Real D(Real eta, Real phi) const;
 		Real E(Real eta) const;
 		Real F(Real eta) const;
+		Real f1() const;
+		Real f2() const;
 	};
 }

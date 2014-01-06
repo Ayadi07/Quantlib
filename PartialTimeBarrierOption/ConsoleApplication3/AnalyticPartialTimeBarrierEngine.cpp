@@ -220,6 +220,14 @@ namespace QuantLib {
 			return 0.0;
 		}
 	}
+	
+	Real AnalyticPartialTimeBarrierEngine::f1() const{
+		return std::log(underlying() / strike()) + 2 * std::log(barrier() / underlying()) + (dividendYield() + (std::pow(volatility(),2)/2))*residualTime();
+	}
+
+	Real AnalyticPartialTimeBarrierEngine::f2() const{
+		return f1() - volatility()*std::sqrt(residualTime());
+	}
 
 }
 
