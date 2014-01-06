@@ -1,25 +1,5 @@
-﻿Build started 1/4/2014 4:47:03 PM.
-     1>Project "C:\Users\Ahmed\Documents\Visual Studio 2012\Projects\ConsoleApplication3\ConsoleApplication3\ConsoleApplication3.vcxproj" on node 2 (Build target(s)).
-     1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt PartialTimeBarrierOption.cpp
-         PartialTimeBarrierOption.cpp
-       Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Ahmed\Documents\Visual Studio 2012\Projects\ConsoleApplication3\Release\PartialTimeBarrierOption.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:"C:\Users\Ahmed\Documents\IMAFA\PFE\QuantLib-1.3\lib" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Ahmed\Documents\Visual Studio 2012\Projects\ConsoleApplication3\Release\PartialTimeBarrierOption.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Ahmed\Documents\Visual Studio 2012\Projects\ConsoleApplication3\Release\PartialTimeBarrierOption.lib" /MACHINE:X86 /SAFESEH Release\PartialTimeBarrierOption.obj
-     1>PartialTimeBarrierOption.obj : error LNK2001: unresolved external symbol "void __cdecl boost::assertion_failed(char const *,char const *,char const *,long)" (?assertion_failed@boost@@YAXPBD00J@Z)
-     1>PartialTimeBarrierOption.obj : error LNK2001: unresolved external symbol "public: __thiscall QuantLib::AnalyticBarrierEngine::AnalyticBarrierEngine(class boost::shared_ptr<class QuantLib::GeneralizedBlackScholesProcess> const &)" (??0AnalyticBarrierEngine@QuantLib@@QAE@ABV?$shared_ptr@VGeneralizedBlackScholesProcess@QuantLib@@@boost@@@Z)
-     1>PartialTimeBarrierOption.obj : error LNK2001: unresolved external symbol "public: __thiscall QuantLib::Date::Date(void)" (??0Date@QuantLib@@QAE@XZ)
-     1>PartialTimeBarrierOption.obj : error LNK2001: unresolved external symbol "public: static class boost::shared_ptr<class QuantLib::GeneralizedBlackScholesProcess> __cdecl QuantLib::detail::ImpliedVolatilityHelper::clone(class boost::shared_ptr<class QuantLib::GeneralizedBlackScholesProcess> const &,class boost::shared_ptr<class QuantLib::SimpleQuote> const &)" (?clone@ImpliedVolatilityHelper@detail@QuantLib@@SA?AV?$shared_ptr@VGeneralizedBlackScholesProcess@QuantLib@@@boost@@ABV45@ABV?$shared_ptr@VSimpleQuote@QuantLib@@@5@@Z)
-     1>PartialTimeBarrierOption.obj : error LNK2001: unresolved external symbol "public: static double __cdecl QuantLib::detail::ImpliedVolatilityHelper::calculate(class QuantLib::Instrument const &,class QuantLib::PricingEngine const &,class QuantLib::SimpleQuote &,double,double,unsigned int,double,double)" (?calculate@ImpliedVolatilityHelper@detail@QuantLib@@SANABVInstrument@3@ABVPricingEngine@3@AAVSimpleQuote@3@NNINN@Z)
-     1>PartialTimeBarrierOption.obj : error LNK2001: unresolved external symbol "public: virtual char const * __thiscall QuantLib::Error::what(void)const " (?what@Error@QuantLib@@UBEPBDXZ)
-     1>PartialTimeBarrierOption.obj : error LNK2001: unresolved external symbol "public: __thiscall QuantLib::Error::Error(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &,long,class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &,class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &)" (??0Error@QuantLib@@QAE@ABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@J00@Z)
-     1>PartialTimeBarrierOption.obj : error LNK2001: unresolved external symbol "protected: virtual void __thiscall QuantLib::OneAssetOption::setupExpired(void)const " (?setupExpired@OneAssetOption@QuantLib@@MBEXXZ)
-     1>PartialTimeBarrierOption.obj : error LNK2001: unresolved external symbol "public: virtual void __thiscall QuantLib::OneAssetOption::fetchResults(class QuantLib::PricingEngine::results const *)const " (?fetchResults@OneAssetOption@QuantLib@@UBEXPBVresults@PricingEngine@2@@Z)
-     1>PartialTimeBarrierOption.obj : error LNK2001: unresolved external symbol "public: virtual bool __thiscall QuantLib::OneAssetOption::isExpired(void)const " (?isExpired@OneAssetOption@QuantLib@@UBE_NXZ)
-     1>PartialTimeBarrierOption.obj : error LNK2001: unresolved external symbol "public: __thiscall QuantLib::OneAssetOption::OneAssetOption(class boost::shared_ptr<class QuantLib::Payoff> const &,class boost::shared_ptr<class QuantLib::Exercise> const &)" (??0OneAssetOption@QuantLib@@QAE@ABV?$shared_ptr@VPayoff@QuantLib@@@boost@@ABV?$shared_ptr@VExercise@QuantLib@@@3@@Z)
-     1>MSVCRT.lib(crtexe.obj) : error LNK2001: unresolved external symbol _main
-     1>C:\Users\Ahmed\Documents\Visual Studio 2012\Projects\ConsoleApplication3\Release\PartialTimeBarrierOption.exe : fatal error LNK1120: 12 unresolved externals
-     1>Done Building Project "C:\Users\Ahmed\Documents\Visual Studio 2012\Projects\ConsoleApplication3\ConsoleApplication3\ConsoleApplication3.vcxproj" (Build target(s)) -- FAILED.
+﻿Build started 1/6/2014 1:26:40 PM.
 
-Build FAILED.
+Build succeeded.
 
-Time Elapsed 00:00:03.59
+Time Elapsed 00:00:00.40

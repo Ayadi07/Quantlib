@@ -18,9 +18,15 @@
     <ClInclude Include="PartialTimeBarrierOption.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="AnalyticPartialTimeBarrierEngineOption.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PartialTimeBarrierOption.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AnalyticPartialTimeBarrierEngineOption.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

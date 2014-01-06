@@ -78,8 +78,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="PartialTimeBarrierOption.cpp" />
+    <ClCompile Include="AnalyticPartialTimeBarrierEngine.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AnalyticPartialTimeBarrierEngine.h" />
     <ClInclude Include="PartialTimeBarrierOption.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
