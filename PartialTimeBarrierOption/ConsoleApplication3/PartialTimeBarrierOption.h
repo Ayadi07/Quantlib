@@ -3,12 +3,16 @@
 #include <ql/instruments/payoffs.hpp>
 
 namespace QuantLib {
+	struct PartialBarrier:public Barrier
+	{
+		enum Type { DownInStart, DownInEnd, UpInStart, UpInEnd, DownOutStart,DownOutEnd, UpOutStart,UpOutEnd };
+	};
 	class GeneralizedBlackScholesProcess;
 	class PartialTimeBarrierOption : public OneAssetOption {
 	public:
 		class arguments;
 		class engine;
-		PartialTimeBarrierOption(Barrier::Type barrierType,
+		PartialTimeBarrierOption(PartialBarrier::Type barrierType,
 			Real barrier,
 			Real rebate,
 			Date coverEventDate,
@@ -24,7 +28,7 @@ namespace QuantLib {
 			Volatility minVol = 1.0e-7,
 			Volatility maxVol = 4.0) const;
 	protected:
-		Barrier::Type barrierType_;
+		PartialBarrier::Type barrierType_;
 		Real barrier_;
 		Real rebate_;
 		Date coverEventDate_;
@@ -34,7 +38,7 @@ namespace QuantLib {
 	class PartialTimeBarrierOption::arguments : public OneAssetOption::arguments {
 	public:
 		arguments();
-		Barrier::Type barrierType;
+		PartialBarrier::Type barrierType;
 		Real barrier;
 		Real rebate;
 		Date coverEventDate;
@@ -47,5 +51,6 @@ namespace QuantLib {
 		PartialTimeBarrierOption::results> {
 	protected:
 		bool triggered(Real underlying) const;
-	};
+	};	
+	
 }
