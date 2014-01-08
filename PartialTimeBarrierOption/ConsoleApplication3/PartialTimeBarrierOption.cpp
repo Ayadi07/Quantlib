@@ -10,7 +10,7 @@
 
 using namespace QuantLib;
 
-PartialTimeBarrierOption::PartialTimeBarrierOption(Barrier::Type barrierType,
+PartialTimeBarrierOption::PartialTimeBarrierOption(PartialBarrier::Type barrierType,
 												   Real barrier,
 												   Real rebate,
 												   Date coverEventDate,
@@ -48,15 +48,15 @@ Volatility PartialTimeBarrierOption::impliedVolatility(
 		boost::shared_ptr<GeneralizedBlackScholesProcess> newProcess =
 			detail::ImpliedVolatilityHelper::clone(process, volQuote);
 
-		
+
 		boost::scoped_ptr<PricingEngine> engine;
 		switch (exercise_->type()) {
 		case Exercise::European:
-////////////////On va implementer la solution analytique sur les pappiers 
-////////////////dans une classe AnalyticPartialTimeBarrierEngine
+			////////////////On va implementer la solution analytique sur les pappiers 
+			////////////////dans une classe AnalyticPartialTimeBarrierEngine
 			engine.reset(new AnalyticBarrierEngine(newProcess));
-////////////////On va implementer la solution analytique sur les pappiers 
-////////////////dans une classe AnalyticPartialTimeBarrierEngine
+			////////////////On va implementer la solution analytique sur les pappiers 
+			////////////////dans une classe AnalyticPartialTimeBarrierEngine
 			break;
 		case Exercise::American:
 		case Exercise::Bermudan:
@@ -77,32 +77,36 @@ Volatility PartialTimeBarrierOption::impliedVolatility(
 
 
 PartialTimeBarrierOption::arguments::arguments()
-	: barrierType(Barrier::Type(-1)), barrier(Null<Real>()),
+	: barrierType(PartialBarrier::Type(-1)), barrier(Null<Real>()),
 	rebate(Null<Real>()), coverEventDate(Null<Date>()) {}
 
 void PartialTimeBarrierOption::arguments::validate() const {
 	OneAssetOption::arguments::validate();
 
 	switch (barrierType) {
-	case Barrier::DownIn:
-	case Barrier::UpIn:
-	case Barrier::DownOut:
-	case Barrier::UpOut:
+	case PartialBarrier::DownInEnd:
+	case PartialBarrier::DownInStart:
+	case PartialBarrier::DownOutStart:
+	case PartialBarrier::DownOutEnd:		
+	case PartialBarrier::UpInEnd:
+	case PartialBarrier::UpInStart:
+	case PartialBarrier::UpOutStart:
+	case PartialBarrier::UpOutEnd:
 		break;
 	default:
 		QL_FAIL("unknown type");
 	}
 
-////////////////Je ne sais pas encore comment en peu comparer "coverEventDate" avec le "settlement"
-////////////////il est important de savoir si on a entrer une date avant la vie de l'option.
-/*ca ne marche pas!	
-if((coverEventDate!=Null<Date>())&&(coverEventDate>=exercise->date))
+	////////////////Je ne sais pas encore comment en peu comparer "coverEventDate" avec le "settlement"
+	////////////////il est important de savoir si on a entrer une date avant la vie de l'option.
+	/*ca ne marche pas!	
+	if((coverEventDate!=Null<Date>())&&(coverEventDate>=exercise->date))
 	{
-		QL_FAIL("Cover Event Date is greater than expiracy date");
+	QL_FAIL("Cover Event Date is greater than expiracy date");
 	}
-*/
-////////////////Je ne sais pas encore comment en peu comparer "coverEventDate" avec le "settlement"
-////////////////il est important de savoir si on a entrer une date avant la vie de l'option.
+	*/
+	////////////////Je ne sais pas encore comment en peu comparer "coverEventDate" avec le "settlement"
+	////////////////il est important de savoir si on a entrer une date avant la vie de l'option.
 
 	QL_REQUIRE(barrier != Null<Real>(), "no barrier given");
 	QL_REQUIRE(rebate != Null<Real>(), "no rebate given");
@@ -111,11 +115,15 @@ if((coverEventDate!=Null<Date>())&&(coverEventDate>=exercise->date))
 
 bool PartialTimeBarrierOption::engine::triggered(Real underlying) const {
 	switch (arguments_.barrierType) {
-	case Barrier::DownIn:
-	case Barrier::DownOut:
+	case PartialBarrier::DownInEnd:
+	case PartialBarrier::DownInStart:
+	case PartialBarrier::DownOutStart:
+	case PartialBarrier::DownOutEnd:
 		return underlying < arguments_.barrier;
-	case Barrier::UpIn:
-	case Barrier::UpOut:
+	case PartialBarrier::UpInEnd:
+	case PartialBarrier::UpInStart:
+	case PartialBarrier::UpOutStart:
+	case PartialBarrier::UpOutEnd:
 		return underlying > arguments_.barrier;
 	default:
 		QL_FAIL("unknown type");

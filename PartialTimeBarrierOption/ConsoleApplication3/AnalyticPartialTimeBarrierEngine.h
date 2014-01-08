@@ -17,6 +17,7 @@ namespace QuantLib {
 		Real underlying() const;
 		Real strike() const;
 		Time residualTime() const;
+		Time coverEventDate() const;
 		Volatility volatility() const;
 		Real barrier() const;
 		Real rebate() const;
@@ -25,15 +26,17 @@ namespace QuantLib {
 		DiscountFactor riskFreeDiscount() const;
 		Rate dividendYield() const;
 		DiscountFactor dividendDiscount() const;
-		Rate mu() const;
-		Real muSigma() const;
-		Real A(Real phi) const;
-		Real B(Real phi) const;
-		Real C(Real eta, Real phi) const;
-		Real D(Real eta, Real phi) const;
-		Real E(Real eta) const;
-		Real F(Real eta) const;
+		Real M(Real a,Real b,Real ro,Integer n) const;
+		Real d1()const;
+		Real d2()const;
+		Real e1() const;
+		Real e2() const;
+		Real e3() const;
+		Real e4() const;
 		Real f1() const;
 		Real f2() const;
+		Real ro() const;
+		Rate mu() const;
+		Real CA(Real strike,Integer n) const;
 	};
 }
