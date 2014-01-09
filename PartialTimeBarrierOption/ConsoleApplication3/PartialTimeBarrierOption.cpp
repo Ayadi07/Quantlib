@@ -87,11 +87,13 @@ void PartialTimeBarrierOption::arguments::validate() const {
 	case PartialBarrier::DownInEnd:
 	case PartialBarrier::DownInStart:
 	case PartialBarrier::DownOutStart:
-	case PartialBarrier::DownOutEnd:		
+	case PartialBarrier::DownOutEndB1:		
+	case PartialBarrier::DownOutEndB2:
 	case PartialBarrier::UpInEnd:
 	case PartialBarrier::UpInStart:
 	case PartialBarrier::UpOutStart:
-	case PartialBarrier::UpOutEnd:
+	case PartialBarrier::UpOutEndB1:
+	case PartialBarrier::UpOutEndB2:
 		break;
 	default:
 		QL_FAIL("unknown type");
@@ -118,13 +120,17 @@ bool PartialTimeBarrierOption::engine::triggered(Real underlying) const {
 	case PartialBarrier::DownInEnd:
 	case PartialBarrier::DownInStart:
 	case PartialBarrier::DownOutStart:
-	case PartialBarrier::DownOutEnd:
+	case PartialBarrier::DownOutEndB2:
 		return underlying < arguments_.barrier;
+	case PartialBarrier::DownOutEndB1:
+		return underlying <= arguments_.barrier;
 	case PartialBarrier::UpInEnd:
 	case PartialBarrier::UpInStart:
 	case PartialBarrier::UpOutStart:
-	case PartialBarrier::UpOutEnd:
+	case PartialBarrier::UpOutEndB2:
 		return underlying > arguments_.barrier;
+	case PartialBarrier::UpOutEndB1:
+		return underlying >= arguments_.barrier;
 	default:
 		QL_FAIL("unknown type");
 	}
