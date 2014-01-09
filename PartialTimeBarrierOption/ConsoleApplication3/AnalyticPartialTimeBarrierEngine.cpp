@@ -122,8 +122,6 @@ namespace QuantLib {
                         result += underlying()*std::expl((dividendYield()-InterestRate())*residualTime())*(M(g1(),e1(),ro(),1)-HS(underlying(),barrier(),2*(mu()+1))*M(g3(),-e3(),-ro(),1));
                         result -= (strike()*std::expl(-InterestRate()*residualTime())*(M(g2(),e2(),ro(),1)-HS(underlying(),barrier(),2*mu())*M(g4(),-e4(),-ro(),1)));
                         return result;break;
-                default:
-                        break;
                 }
         }
 		
@@ -144,7 +142,7 @@ namespace QuantLib {
 				new AnalyticEuropeanEngine(process_)));
 
 			//Calcul result
-			return europeanOption.NPV - CA(n);
+			return europeanOption.NPV() - CA(n);
 		}
 		
         Real AnalyticPartialTimeBarrierEngine::CA(Integer n) const
@@ -232,7 +230,7 @@ namespace QuantLib {
         }
         Real AnalyticPartialTimeBarrierEngine::ro() const
         {
-                SQRT(coverEventDate()/residualTime());
+                return SQRT(coverEventDate()/residualTime());
         }
         Rate AnalyticPartialTimeBarrierEngine::mu() const {
                 Volatility vol = volatility();
@@ -308,14 +306,14 @@ namespace QuantLib {
                 Real vol=volatility();
                 return g3()-vol*SQRT(T2);
         }
-        Real LOG(Real r)
+		Real AnalyticPartialTimeBarrierEngine::LOG(Real r) const
         {
                 return std::log(r);
         }
-        Real SQRT(Real r){
+		Real AnalyticPartialTimeBarrierEngine::SQRT(Real r) const{
                 return std::sqrt(r);
         }
-        Real HS(Real S, Real H, Real power)
+		Real AnalyticPartialTimeBarrierEngine::HS(Real S, Real H, Real power) const
         {
                 return std::powl((H/S),power);
         }

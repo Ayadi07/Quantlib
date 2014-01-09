@@ -44,5 +44,8 @@ namespace QuantLib {
                 Real g2()const;
                 Real g3()const;
                 Real g4()const;
+				Real LOG(Real r) const;
+				Real SQRT(Real r) const;
+				Real HS(Real S, Real H, Real power)const;
         };
 }
