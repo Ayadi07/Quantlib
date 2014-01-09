@@ -1,5 +1,6 @@
 #include "AnalyticPartialTimeBarrierEngine.h"
 #include <ql/exercise.hpp>
+#include <ql/quantlib.hpp>
 
 namespace QuantLib {
 
@@ -36,8 +37,10 @@ namespace QuantLib {
 				results_.value = CA(strike,-1);
 				break;
 			case PartialBarrier::DownInStart:
+				results_.value = CIA(1);
 				break;
 			case PartialBarrier::UpInStart:
+				results_.value = CIA(-1);
 				break;
 				//Partial-Time-Start //end
 				//Partial-Time-End
@@ -59,6 +62,26 @@ namespace QuantLib {
 			default:
 				QL_FAIL("unknown Type");
 			}
+		}
+
+		//arg n : -1 Up-and-In Call
+		//arg n :  1 Down-and-In Call 
+		Real AnalyticPartialTimeBarrierEngine::CIA(Integer n) const
+		{
+			//Calcul Vannilla Call Option
+			boost::shared_ptr<EuropeanExercise> exercise =
+				boost::dynamic_pointer_cast<EuropeanExercise>(arguments_.exercise);
+
+			boost::shared_ptr<PlainVanillaPayoff> payoff =
+				boost::dynamic_pointer_cast<PlainVanillaPayoff>(arguments_.payoff);
+			
+			VanillaOption europeanOption(payoff, exercise);
+
+			europeanOption.setPricingEngine(boost::shared_ptr<PricingEngine>(
+				new AnalyticEuropeanEngine(process_)));
+
+			//Calcul result
+			return europeanOption.NPV - CA(strike(), n);
 		}
 
 		Real AnalyticPartialTimeBarrierEngine::CA(Real strike,Integer n) const

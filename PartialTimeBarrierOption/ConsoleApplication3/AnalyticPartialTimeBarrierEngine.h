@@ -38,5 +38,6 @@ namespace QuantLib {
 		Real ro() const;
 		Rate mu() const;
 		Real CA(Real strike,Integer n) const;
+		Real CIA(Integer n) const;
 	};
 }
