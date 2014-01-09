@@ -5,7 +5,7 @@
 namespace QuantLib {
 	struct PartialBarrier:public Barrier
 	{
-		enum Type { DownInStart, DownInEnd, UpInStart, UpInEnd, DownOutStart,DownOutEnd, UpOutStart,UpOutEnd };
+		enum Type { DownInStart, DownInEnd, UpInStart, UpInEnd, DownOutStart,DownOutEndB1, DownOutEndB2, UpOutStart,UpOutEndB1,UpOutEndB2 };
 	};
 	class GeneralizedBlackScholesProcess;
 	class PartialTimeBarrierOption : public OneAssetOption {
