@@ -37,12 +37,7 @@ namespace QuantLib {
 		Real f2() const;
 		Real ro() const;
 		Rate mu() const;
-		Real CoB2(PartialBarrier::Type barrierType) const;
-		Real CoB1() const;
-		Real CA(Integer n) const;
-		Real g1()const;
-		Real g2()const;
-		Real g3()const;
-		Real g4()const;
+		Real CA(Real strike,Integer n) const;
+		Real CIA(Integer n) const;
 	};
 }
