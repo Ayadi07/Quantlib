@@ -31,14 +31,16 @@ namespace QuantLib {
                         switch (barrierType) {
                                 //Partial-Time-Start
                         case PartialBarrier::DownOutStart:
-                                results_.value = CA(strike,1);
+                                results_.value = CA(1);
                                 break;
                         case PartialBarrier::UpOutStart:
-                                results_.value = CA(strike,-1);
+                                results_.value = CA(-1);
                                 break;
                         case PartialBarrier::DownInStart:
+								results_.value = CIA(1);
                                 break;
                         case PartialBarrier::UpInStart:
+								results_.value = CIA(-1);
                                 break;
                                 //Partial-Time-Start //end
                                 //Partial-Time-End
