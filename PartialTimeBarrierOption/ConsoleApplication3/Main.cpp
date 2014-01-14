@@ -20,7 +20,7 @@ int main(int, char*[])
 	Settings::instance().evaluationDate() = todaysDate;
 	Date settlementDate(27, December, 2013);
 	Date maturity(27, December, 2014);
-	Date coverEventDate(27, June, 2014);
+	Date coverEventDate(26, June, 2014);
 	DayCounter dayCounter = Actual365Fixed();
 
 	//Option parameter
@@ -74,7 +74,7 @@ int main(int, char*[])
 	partialTimeBarrierOption.setPricingEngine(boost::shared_ptr<PricingEngine>(
 		new AnalyticPartialTimeBarrierEngine(bsmProcess)));
 
-	std::cout << "European Option value " << partialTimeBarrierOption.NPV() << std::endl;
+	std::cout << "Partial Time End Barrier Call Type B1 option " << partialTimeBarrierOption.NPV() << std::endl;
 	std::cin.get();
 	return 0;
 }

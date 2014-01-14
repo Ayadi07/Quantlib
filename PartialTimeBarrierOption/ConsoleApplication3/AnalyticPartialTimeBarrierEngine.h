@@ -25,7 +25,7 @@ namespace QuantLib {
                 DiscountFactor riskFreeDiscount() const;
                 Rate dividendYield() const;
                 DiscountFactor dividendDiscount() const;
-                Real M(Real a,Real b,Real ro,Integer n) const;
+                Real M(Real a,Real b,Real rho,Integer n) const;
                 Real d1()const;
                 Real d2()const;
                 Real e1() const;
@@ -34,7 +34,7 @@ namespace QuantLib {
                 Real e4() const;
                 Real f1() const;
                 Real f2() const;
-                Real ro() const;
+                Real rho() const;
                 Rate mu() const;
                 Real CoB2(PartialBarrier::Type barrierType) const;
                 Real CoB1() const;
