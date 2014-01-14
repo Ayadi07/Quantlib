@@ -114,8 +114,8 @@ namespace QuantLib {
 				Real divi = dividendYield();
 				Real T1 = coverEventDate();
 
-
-                switch (strike()>barrier())
+				bool b=strike()>barrier();
+                switch (b)
                 {
                 case true: 
                         result = underlying()*std::expl((dividendYield()-InterestRate())*residualTime());
