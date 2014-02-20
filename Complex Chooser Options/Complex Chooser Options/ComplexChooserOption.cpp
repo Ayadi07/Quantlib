@@ -5,7 +5,8 @@
 namespace QuantLib {
 
     ComplexChooserOption::ComplexChooserOption(
-                                  Date choosingDate,
+                                  Date choosingDateCall,
+								  Date choosingDatePut,
 								  Real strikeCall,
 								  Real strikePut,
 								  const boost::shared_ptr<Exercise>& exerciseCall,
@@ -30,17 +31,18 @@ namespace QuantLib {
         ComplexChooserOption::arguments* moreArgs =
             dynamic_cast<ComplexChooserOption::arguments*>(args);
         QL_REQUIRE(moreArgs != 0, "wrong argument type");
-        moreArgs->choosingDate=choosingDate_;
+        moreArgs->choosingDateCall=choosingDateCall_;
+		moreArgs->choosingDatePut = choosingDatePut_;
 		moreArgs->strikeCall=strikeCall_;
 		moreArgs->strikePut=strikePut_;
     }
 
     void ComplexChooserOption::arguments::validate() const {
         OneAssetOption::arguments::validate();
-        QL_REQUIRE(choosingDate != Date(), " no choosing date given");
-		QL_REQUIRE(choosingDate < exerciseCall->lastDate(),
+		QL_REQUIRE(choosingDateCall != Date() || choosingDatePut != Date(), " no choosing date given");
+		QL_REQUIRE(choosingDateCall < exerciseCall->lastDate(),
                    "choosing date later than or equal to Call maturity date");
-		QL_REQUIRE(choosingDate < exercisePut->lastDate(),
+		QL_REQUIRE(choosingDatePut < exercisePut->lastDate(),
                    "choosing date later than or equal to Put maturity date");
     }
 

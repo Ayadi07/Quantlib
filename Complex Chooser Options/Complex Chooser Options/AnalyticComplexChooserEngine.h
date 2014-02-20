@@ -23,6 +23,8 @@ namespace QuantLib {
 		DiscountFactor riskFreeDiscount() const;
 		Real GBlackScholes(Option::Type optionType) const;
 		Real GDelta(Option::Type optionType) const;
+		Real CriticalValueChooser() const;
+		Real ComplexChosser() const;
 
 		
 	};

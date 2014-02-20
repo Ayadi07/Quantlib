@@ -13,7 +13,8 @@ namespace QuantLib{
 		class arguments;
 		class engine;		
 		ComplexChooserOption(
-			Date choosingDate,
+			Date choosingDateCall,
+			Date choosingDatePut,
 			Real strikeCall,
 			Real strikePut,
 			const boost::shared_ptr<Exercise>& exerciseCall,
@@ -21,7 +22,8 @@ namespace QuantLib{
 		void setupArguments(PricingEngine::arguments*) const;
 
 	protected:
-		Date choosingDate_;
+		Date choosingDateCall_;
+		Date choosingDatePut_;
 		Real strikeCall_;
 		Real strikePut_;
 		const boost::shared_ptr<Exercise>& exerciseCall_;
@@ -32,9 +34,11 @@ namespace QuantLib{
 	class ComplexChooserOption::arguments
         : public OneAssetOption::arguments {
       public:
-        arguments() : choosingDate(Null<Date>()) {}
+		//arguments() : choosingDate(Null<Date>()) {};
+		arguments();
         void validate() const;
-        Date choosingDate;
+        Date choosingDateCall;
+		Date choosingDatePut;
 		Real strikeCall;
 		Real strikePut;
 		boost::shared_ptr<Exercise>& exerciseCall;
