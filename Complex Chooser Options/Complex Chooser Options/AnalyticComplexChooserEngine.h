@@ -11,22 +11,26 @@ namespace QuantLib {
 		void calculate() const;
 
 	private:
+
 		boost::shared_ptr<GeneralizedBlackScholesProcess> process_;
-
-		Real underlying() const;
+		//Real underlying() const;
 		Real strike(Option::Type optionType) const;
-		Time residualTime() const;
-		Time volatility() const;
-		Rate dividendYield() const;
-		DiscountFactor dividendDiscount() const;
-		Rate riskFreeRate() const;
-		DiscountFactor riskFreeDiscount() const;
-		Real GBlackScholes(Option::Type optionType) const;
-		Real GDelta(Option::Type optionType) const;
-		Real CriticalValueChooser() const;
-		Real ComplexChosser() const;
+		Time choosingDate() const;
+		Time putMaturity() const;
+		Time callMaturity() const;
+		Volatility volatility() const;
 
-		
+		Rate dividendYield(Time t) const;
+		DiscountFactor dividendDiscount(Time t) const;
+
+		Rate riskFreeRate(Time t) const;
+		DiscountFactor riskFreeDiscount(Time t) const;
+		BlackScholesCalculator bsCalculator(Real spot, Option::Type optionType) const;
+		//Real GBlackScholes(Option::Type optionType) const;
+		//Real GDelta(Option::Type optionType) const;
+		Real CriticalValueChooser() const;
+
+		Real ComplexChosser() const;
 	};
 }
 
