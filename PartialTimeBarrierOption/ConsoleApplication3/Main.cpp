@@ -4,7 +4,7 @@
 #include <ql\termstructures\yield\flatforward.hpp>
 #include <ql\exercise.hpp>
 #include <ql\quotes\simplequote.hpp>
-
+#include <ql\time\daycounters\actual360.hpp>
 #include <ql\termstructures\volatility\equityfx\blackconstantvol.hpp>
 
 
@@ -21,7 +21,9 @@ int main(int, char*[])
 	Date settlementDate(27, December, 2013);
 	Date maturity(27, December, 2014);
 	Date coverEventTime(28, March, 2014);
-	DayCounter dayCounter = Actual365Fixed();
+	DayCounter dayCounter = Actual360();
+	
+	
 
 	//Option parameter
 	/*
@@ -38,9 +40,9 @@ int main(int, char*[])
 	
 	std::vector<Date> v_coverEventTime;
 	//v_coverEventTime.push_back(Date(27, December, 2013));
-	v_coverEventTime.push_back(Date(28, March, 2014));
-	v_coverEventTime.push_back(Date(26, June, 2014));
-	v_coverEventTime.push_back(Date(27, September, 2014));
+	v_coverEventTime.push_back(settlementDate + 90);
+	v_coverEventTime.push_back(settlementDate + 180);
+	v_coverEventTime.push_back(settlementDate + 270);
 	//v_coverEventTime.push_back(Date(27, December, 2014));
 	
 
@@ -63,9 +65,9 @@ int main(int, char*[])
 	std::vector<Real> values;
 
 	Option::Type type(Option::Call);
-	Real underlying = 95;
-	Real strike = 90;
-	Spread dividendYield = 0.1;
+	//Real underlying = 95;
+	//Real strike = 90;
+	Spread dividendYield = 0.0;
 	Rate riskFreeRate = 0.1;
 	Volatility volatility = 0.25;
 
@@ -118,6 +120,7 @@ int main(int, char*[])
 
 			std::cout << "Underlying : " << v_underlying[i]<< "  Strike : " << v_strike[i] << "  CoverEventTime : " << v_coverEventTime[j] << std::endl;
 			std::cout << "Partial Time End Barrier Call Type B1 option " << partialTimeBarrierOption.NPV()<< std::endl;
+			
 		}
 		std::cout << std::endl;
 	}

@@ -12,7 +12,6 @@ namespace QuantLib {
                 void calculate() const;
         private:
                 boost::shared_ptr<GeneralizedBlackScholesProcess> process_;
-                CumulativeNormalDistribution f_;
                 Real underlying() const;
                 Real strike() const;
                 Time residualTime() const;
@@ -25,7 +24,7 @@ namespace QuantLib {
                 DiscountFactor riskFreeDiscount() const;
                 Rate dividendYield() const;
                 DiscountFactor dividendDiscount() const;
-                Real M(Real a,Real b,Real rho,Integer n) const;
+                Real M(Real a,Real b,Real rho) const;
                 Real d1()const;
                 Real d2()const;
                 Real e1() const;
