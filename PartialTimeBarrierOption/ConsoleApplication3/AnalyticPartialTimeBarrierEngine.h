@@ -15,8 +15,8 @@ namespace QuantLib {
                 Real underlying() const;
                 Real strike() const;
                 Time residualTime() const;
-                Time coverEventDate() const;
-                Volatility volatility() const;
+                Time coverEventTime() const;
+                Volatility volatility(int i) const;
                 Real barrier() const;
                 Real rebate() const;
                 Real stdDeviation() const;

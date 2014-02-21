@@ -16,34 +16,20 @@ int main(int, char*[])
 	std::cout << std::endl;
 	// set up dates
 	Calendar calendar = TARGET();
-	Date todaysDate(25, December, 2013);
+	Date todaysDate(6, January, 2014);
 	Settings::instance().evaluationDate() = todaysDate;
-	Date settlementDate(27, December, 2013);
-	Date maturity(27, December, 2014);
-	Date coverEventTime(28, March, 2014);
+	Date settlementDate(8, January, 2014);
+	Date maturity(8, January, 2015);
 	DayCounter dayCounter = Actual360();
 	
-	
-
-	//Option parameter
-	/*
-	Ajouter vecteur underlying	95 95 105 105
-	Ajouter vecteur strike		90 110 90 110
-	Ajouter vecteur coverEventDate
-	27, December, 2013
-	28, Mars, 2014
-	26, June, 2014
-	27, September, 2014
-	27, December, 2014
-	*/
 
 	
 	std::vector<Date> v_coverEventTime;
-	//v_coverEventTime.push_back(Date(27, December, 2013));
+	//v_coverEventTime.push_back(settlementDate + 0);
 	v_coverEventTime.push_back(settlementDate + 90);
 	v_coverEventTime.push_back(settlementDate + 180);
 	v_coverEventTime.push_back(settlementDate + 270);
-	//v_coverEventTime.push_back(Date(27, December, 2014));
+	v_coverEventTime.push_back(settlementDate + 360);
 	
 
 	Real u1 = 95;
@@ -65,8 +51,6 @@ int main(int, char*[])
 	std::vector<Real> values;
 
 	Option::Type type(Option::Call);
-	//Real underlying = 95;
-	//Real strike = 90;
 	Spread dividendYield = 0.0;
 	Rate riskFreeRate = 0.1;
 	Volatility volatility = 0.25;
@@ -79,7 +63,7 @@ int main(int, char*[])
 			boost::shared_ptr<StrikedTypePayoff> payoff(new PlainVanillaPayoff(type, v_strike[i]));
 			boost::shared_ptr<Exercise> europeanExercise(new EuropeanExercise(maturity));
 			PartialTimeBarrierOption partialTimeBarrierOption(PartialBarrier::Type::DownOutEndB1,
-				100,
+				100.0,
 				0.0,
 				v_coverEventTime[j],
 				payoff,

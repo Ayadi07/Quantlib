@@ -106,14 +106,16 @@ namespace QuantLib {
 	Real AnalyticPartialTimeBarrierEngine::CoB1() const
 	{
 
-		Real result;
+		Real result = 0.0;
 		Real strike2 = strike();
 		Real bar = barrier();
 		Real under = underlying();
 		Real resi = residualTime();
+		std::cout << resi << std::endl;
 		Real rateI = riskFreeRate();
 		Real divi = dividendYield();
-		Real T1 = coverEventDate();
+		Real T1 = coverEventTime();
+		std::cout << T1	<< std::endl;
 		Real b = riskFreeRate()-dividendYield();
 
 		if (strike()>barrier())
@@ -186,17 +188,21 @@ namespace QuantLib {
 	Time AnalyticPartialTimeBarrierEngine::residualTime() const {
 		return process_->time(arguments_.exercise->lastDate());
 	}
-	Time AnalyticPartialTimeBarrierEngine::coverEventDate() const
+	Time AnalyticPartialTimeBarrierEngine::coverEventTime() const
 	{
 		return process_->time(arguments_.coverEventDate);
 	}
 
-	Volatility AnalyticPartialTimeBarrierEngine::volatility() const {
-		return process_->blackVolatility()->blackVol(residualTime(), strike());
+	Volatility AnalyticPartialTimeBarrierEngine::volatility(int i) const {
+		if(i == 1){
+			return process_->blackVolatility()->blackVol(coverEventTime(), strike());
+		}else{
+			return process_->blackVolatility()->blackVol(residualTime(), strike());
+		}
 	}
 
 	Real AnalyticPartialTimeBarrierEngine::stdDeviation() const {
-		return volatility() * std::sqrt(residualTime());
+		return volatility(2) * std::sqrt(residualTime());
 	}
 
 	Real AnalyticPartialTimeBarrierEngine::barrier() const {
@@ -228,13 +234,13 @@ namespace QuantLib {
 
 	Real AnalyticPartialTimeBarrierEngine::f1() const{
 		Real _underlying = underlying();
-		Real _volatility = volatility();
+		Real _volatility = volatility(2);
 		Real _residualTime = residualTime();
 		return (std::log(_underlying / strike()) + 2 * std::log(barrier() / _underlying) + ((riskFreeRate()-dividendYield()) + (std::pow(_volatility, 2) / 2))*_residualTime) / (_volatility*SQRT(_residualTime));
 	}
 
 	Real AnalyticPartialTimeBarrierEngine::f2() const{
-		return f1() - volatility()*std::sqrt(residualTime());
+		return f1() - volatility(2)*std::sqrt(residualTime());
 	}
 	Real AnalyticPartialTimeBarrierEngine::M(Real a,Real b,Real rho) const 
 	{
@@ -244,76 +250,76 @@ namespace QuantLib {
 	}
 	Real AnalyticPartialTimeBarrierEngine::rho() const
 	{
-		return std::sqrt(coverEventDate()/residualTime());
+		return std::sqrt(coverEventTime()/residualTime());
 	}
 	Rate AnalyticPartialTimeBarrierEngine::mu() const {
-		Volatility vol = volatility();
+		Volatility vol = volatility(1);
 		return (dividendYield() - (vol * vol) / 2) / (vol * vol);
 	}
 
 	Real AnalyticPartialTimeBarrierEngine::d1()const
 	{
-		Volatility vol = volatility();
+		Volatility vol = volatility(2);
 		Real b= riskFreeRate()-dividendYield();
 		Time T2=residualTime();
 		return (LOG(underlying()/strike())+(b+vol*vol/2)*T2)/(SQRT(T2)*vol);
 	}
 	Real AnalyticPartialTimeBarrierEngine::d2()const
 	{
-		Volatility vol = volatility();
+		Volatility vol = volatility(2);
 		Time T2=residualTime();
 		return d1() - vol*SQRT(T2);
 	}
 
 	Real AnalyticPartialTimeBarrierEngine::e1()const
 	{
-		Volatility vol = volatility();
+		Volatility vol = volatility(1);
 		Real b= riskFreeRate()-dividendYield();
-		Time T1=coverEventDate();
+		Time T1=coverEventTime();
 		return (LOG(underlying()/barrier())+(b+vol*vol/2)*T1)/(SQRT(T1)*vol);
 
 
 	}
 	Real AnalyticPartialTimeBarrierEngine::e2()const
 	{
-		Volatility vol = volatility();
-		Time T1=coverEventDate();
+		Volatility vol = volatility(1);
+		Time T1=coverEventTime();
 		return e1() - vol*SQRT(T1);
 	}
 
 	Real AnalyticPartialTimeBarrierEngine::e3()const
 	{
-		Time T1=coverEventDate();
-		Real vol=volatility();
+		Time T1=coverEventTime();
+		Real vol=volatility(1);
 		return e1()+(2*LOG(barrier()/underlying()) /(vol*SQRT(T1)));
 	}
 
 	Real AnalyticPartialTimeBarrierEngine::e4()const
 	{
-		return e3()-volatility()*SQRT(coverEventDate());
+		return e3()-volatility(1)*SQRT(coverEventTime());
 	}
 
 	Real AnalyticPartialTimeBarrierEngine::g1()const
 	{
-		Volatility vol = volatility();
+		Volatility vol = volatility(2);
 		Real b= riskFreeRate()-dividendYield();
 		Time T2=residualTime();
 		return (LOG(underlying()/barrier())+(b+vol*vol/2)*T2)/(SQRT(T2)*vol);
 	}
 	Real AnalyticPartialTimeBarrierEngine::g2()const
 	{
-		Volatility vol = volatility();
+		Volatility vol = volatility(2);
 		Time T2=residualTime();
 		return g1() - vol*SQRT(T2);
 	}
 	Real AnalyticPartialTimeBarrierEngine::g3()const{
 		Time T2=residualTime();
-		Real vol=volatility();
+		Real vol=volatility(2);
 		return g1()+(2*LOG(barrier()/underlying()) /(vol*SQRT(T2)));
 	}
 	Real AnalyticPartialTimeBarrierEngine::g4()const{
 		Time T2=residualTime();
-		Real vol=volatility();
+		Real vol=volatility(2);
 		return g3()-vol*SQRT(T2);
 	}
 	Real AnalyticPartialTimeBarrierEngine::LOG(Real r) const
