@@ -24,9 +24,9 @@ namespace QuantLib {
 
 	Real AnalyticComplexChooserEngine::ComplexChosser() const{
 		Real S = process_->x0();
-		Real b = riskFreeRate() - dividendYield();
-		Real v = volatility();
-		Real r = riskFreeRate();
+		Real b;
+		Real v;
+		Real r = riskFreeRate(choosingDate());
 		Real Xc = arguments_.strikeCall;
 		Real Xp = arguments_.strikePut;
 		Time Tc = callMaturity();
@@ -34,17 +34,29 @@ namespace QuantLib {
 		Time T = choosingDate();
 
 		Real i = CriticalValueChooser();
+		b=riskFreeRate(choosingDate()) - dividendYield(choosingDate());
+		v = volatility(T);
 		Real d1 = (log(S / i) + (b + pow(v, 2) / 2)*T) / (v*sqrt(T));
 		Real d2 = d1 - v*sqrt(T);
+
+		b=riskFreeRate(callMaturity()) - dividendYield(callMaturity());
+		v = volatility(Tc);
 		Real y1 = (log(S / Xc) + (b + pow(v, 2) / 2)*Tc) / (v*sqrt(Tc));
+
+		b=riskFreeRate(putMaturity()) - dividendYield(putMaturity());
+		v = volatility(Tp);
 		Real y2 = (log(S / Xp) + (b + pow(v, 2) / 2)*Tp) / (v*sqrt(Tp));
+
 		Real rho1 = sqrt(T / Tc);
 		Real rho2 = sqrt(T / Tp);
-
+		b=riskFreeRate(callMaturity()) - dividendYield(callMaturity());
+		r = riskFreeRate(callMaturity());
 		Real ComplexChooser = S * exp((b - r)*Tc) *  BivariateCumulativeNormalDistributionDr78(rho1)(d1, y1) 
-			- Xc * exp(-r*Tc)*BivariateCumulativeNormalDistributionDr78(rho1)(d2, y1 - v * sqrt(Tc)) 
-			- S * exp((b - r)*Tp) * BivariateCumulativeNormalDistributionDr78(rho2)(-d1, -y2) 
-			+ Xp * exp(-r*Tp) * BivariateCumulativeNormalDistributionDr78(rho2)(-d2, -y2 + v * sqrt(Tp));
+			- Xc * exp(-r*Tc)*BivariateCumulativeNormalDistributionDr78(rho1)(d2, y1 - v * sqrt(Tc)) ;
+		b=riskFreeRate(putMaturity()) - dividendYield(putMaturity());
+		r = riskFreeRate(putMaturity());
+		ComplexChooser-= S * exp((b - r)*Tp) * BivariateCumulativeNormalDistributionDr78(rho2)(-d1, -y2);
+		ComplexChooser+= Xp * exp(-r*Tp) * BivariateCumulativeNormalDistributionDr78(rho2)(-d2, -y2 + v * sqrt(Tp));
 		return ComplexChooser;
 	}
 
@@ -65,7 +77,7 @@ namespace QuantLib {
 			//payoff for a Call Option
 			vanillaPayoff = boost::shared_ptr<PlainVanillaPayoff>(new PlainVanillaPayoff(Option::Type::Call, strike(Option::Type::Call)));
 			//QuantLib requires sigma * sqrt(T) rather than just sigma/volatility
-			vol = volatility() * std::sqrt(t);
+			vol = volatility(t) * std::sqrt(t);
 			//calculate dividend discount factor assuming continuous compounding (e^-rt)
 			growth = dividendDiscount(t);
 			//calculate payoff discount factor assuming continuous compounding 
@@ -75,7 +87,7 @@ namespace QuantLib {
 
 			Time t=putMaturity()-choosingDate();			
 			vanillaPayoff = boost::shared_ptr<PlainVanillaPayoff>(new PlainVanillaPayoff(Option::Type::Put, strike(Option::Type::Put)));
-			vol = volatility() * std::sqrt(t);
+			vol = volatility(t) * std::sqrt(t);
 			growth = dividendDiscount(t);
 			discount = riskFreeDiscount(t);
 		}
@@ -140,8 +152,8 @@ namespace QuantLib {
 	}
 
 	//Je ne sais pas pour le strike et je ne sais pas si il faut utiliser cette volatility dans GBlackScholes
-	Volatility AnalyticComplexChooserEngine::volatility() const {
-		return process_->blackVolatility()->blackVol(choosingDate(), arguments_.strikeCall);
+	Volatility AnalyticComplexChooserEngine::volatility(Time t) const {
+		return process_->blackVolatility()->blackVol(t, arguments_.strikeCall);
 	}
 
 	Rate AnalyticComplexChooserEngine::dividendYield(Time t) const {
