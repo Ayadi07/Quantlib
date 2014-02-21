@@ -1,77 +1,25 @@
 #include "AnalyticComplexChooserEngine.h"
 #include <boost\math\distributions.hpp>
-#include <ql/pricingengines/blackscholescalculator.hpp>
+//#include <ql/pricingengines/blackscholescalculator.hpp>
+//#include <ql/math/distributions/bivariatenormaldistribution.hpp>
 #include <ql/quantlib.hpp>
-
 
 namespace QuantLib {
 
 	AnalyticComplexChooserEngine::AnalyticComplexChooserEngine(
 		const boost::shared_ptr<GeneralizedBlackScholesProcess>& process)
 		: process_(process) {
-		registerWith(process_);
+			registerWith(process_);
 	}
 
 
 	AnalyticComplexChooserEngine::~AnalyticComplexChooserEngine()
 	{
+		unregisterWithAll();
 	}
 
 	void AnalyticComplexChooserEngine::calculate() const {
-
-	}
-
-	Real AnalyticComplexChooserEngine::GBlackScholes(Option::Type optionType) const{
-		//Je ne sais pas où intervient le b
-		Real spot = process_->x0();
-		//QuantLib requires sigma * sqrt(T) rather than just sigma/volatility
-		//Prendre TC-T pour le residual time
-		Real vol = volatility() * std::sqrt(residualTime());
-		//calculate dividend discount factor assuming continuous compounding (e^-rt)
-		DiscountFactor growth = dividendDiscount();
-
-		//calculate payoff discount factor assuming continuous compounding 
-		DiscountFactor discount = riskFreeDiscount();
-
-		//instantiate payoff function for a call 
-		boost::shared_ptr<PlainVanillaPayoff > vanillaCallPayoff;
-		if (optionType == Option::Type::Call){
-
-			vanillaCallPayoff = boost::shared_ptr<PlainVanillaPayoff>(new PlainVanillaPayoff(Option::Type::Call, strike(Option::Type::Call)));
-		}
-		else{
-			vanillaCallPayoff = boost::shared_ptr<PlainVanillaPayoff>(new PlainVanillaPayoff(Option::Type::Put, strike(Option::Type::Put)));
-		}
-
-		BlackScholesCalculator bsCalculator(vanillaCallPayoff, spot, growth, vol, discount);
-
-		return bsCalculator.value();
-
-	}
-
-	Real AnalyticComplexChooserEngine::GDelta(Option::Type optionType) const{
-		Real spot = process_->x0();
-		//QuantLib requires sigma * sqrt(T) rather than just sigma/volatility
-		Real vol = volatility() * std::sqrt(residualTime());
-		//calculate dividend discount factor assuming continuous compounding (e^-rt)
-		DiscountFactor growth = dividendDiscount();
-
-		//calculate payoff discount factor assuming continuous compounding 
-		DiscountFactor discount = riskFreeDiscount();
-
-		//instantiate payoff function for a call 
-		boost::shared_ptr<PlainVanillaPayoff > vanillaCallPayoff;
-		if (optionType == Option::Type::Call){
-
-			vanillaCallPayoff = boost::shared_ptr<PlainVanillaPayoff>(new PlainVanillaPayoff(Option::Type::Call, strike(Option::Type::Call)));
-		}
-		else{
-			vanillaCallPayoff = boost::shared_ptr<PlainVanillaPayoff>(new PlainVanillaPayoff(Option::Type::Put, strike(Option::Type::Put)));
-		}
-
-		BlackScholesCalculator bsCalculator(vanillaCallPayoff, spot, growth, vol, discount);
-
-		return bsCalculator.delta();
+		results_.value=ComplexChosser();
 	}
 
 	Real AnalyticComplexChooserEngine::ComplexChosser() const{
@@ -81,9 +29,9 @@ namespace QuantLib {
 		Real r = riskFreeRate();
 		Real Xc = arguments_.strikeCall;
 		Real Xp = arguments_.strikePut;
-		Time Tc = process_->time(arguments_.choosingDateCall);
-		Time Tp = process_->time(arguments_.choosingDatePut);
-		Time T = residualTime();
+		Time Tc = callMaturity();
+		Time Tp = putMaturity();
+		Time T = choosingDate();
 
 		Real i = CriticalValueChooser();
 		Real d1 = (log(S / i) + (b + pow(v, 2) / 2)*T) / (v*sqrt(T));
@@ -100,12 +48,53 @@ namespace QuantLib {
 		return ComplexChooser;
 	}
 
+	//GBlackSchole and GDelta Optimisation: 
+	//Two in one function so it does not have to use
+	//BlackScholesCalculator two times (value then delta )for the same option.
+	BlackScholesCalculator AnalyticComplexChooserEngine::bsCalculator(Real spot, Option::Type optionType) const {
+		//Real spot = process_->x0();
+		Real vol;
+		DiscountFactor growth;
+		DiscountFactor discount;
+
+		//payoff 
+		boost::shared_ptr<PlainVanillaPayoff > vanillaPayoff;
+		if (optionType == Option::Type::Call){
+			//TC-T
+			Time t=callMaturity()-choosingDate();
+			//payoff for a Call Option
+			vanillaPayoff = boost::shared_ptr<PlainVanillaPayoff>(new PlainVanillaPayoff(Option::Type::Call, strike(Option::Type::Call)));
+			//QuantLib requires sigma * sqrt(T) rather than just sigma/volatility
+			vol = volatility() * std::sqrt(t);
+			//calculate dividend discount factor assuming continuous compounding (e^-rt)
+			growth = dividendDiscount(t);
+			//calculate payoff discount factor assuming continuous compounding 
+			discount = riskFreeDiscount(t);
+		}
+		else{
+
+			Time t=putMaturity()-choosingDate();			
+			vanillaPayoff = boost::shared_ptr<PlainVanillaPayoff>(new PlainVanillaPayoff(Option::Type::Put, strike(Option::Type::Put)));
+			vol = volatility() * std::sqrt(t);
+			growth = dividendDiscount(t);
+			discount = riskFreeDiscount(t);
+		}
+
+		BlackScholesCalculator bs(vanillaPayoff, spot, growth, vol, discount);
+		return bs;
+	}
+
 	Real AnalyticComplexChooserEngine::CriticalValueChooser() const{
 		Real Sv = process_->x0();
-		Real ci = GBlackScholes(Option::Type::Call);
-		Real Pi = GBlackScholes(Option::Type::Put);
-		Real dc = GDelta(Option::Type::Call);
-		Real dp = GDelta(Option::Type::Put);
+
+		BlackScholesCalculator bs=bsCalculator(Sv,Option::Type::Call);
+		Real ci = bs.value();
+		Real dc = bs.delta();
+
+		bs=bsCalculator(Sv,Option::Type::Put);
+		Real Pi = bs.value();
+		Real dp = bs.delta();
+
 		Real yi = ci - Pi;
 		Real di = dc - dp;
 		Real epsilon = 0.001;
@@ -113,22 +102,26 @@ namespace QuantLib {
 		//Newton-Raphson prosess
 		while (abs(yi) > epsilon){
 			Sv = Sv - yi / di;
-			ci = GBlackScholes(Option::Type::Call);
-			Pi = GBlackScholes(Option::Type::Put);
-			dc = GDelta(Option::Type::Call);
-			dp = GDelta(Option::Type::Put);
+
+			bs=bsCalculator(Sv,Option::Type::Call);
+			ci = bs.value();
+			dc = bs.delta();
+
+			bs=bsCalculator(Sv,Option::Type::Put);
+			Pi = bs.value();
+			dp = bs.delta();
+
 			yi = ci - Pi;
 			di = dc - dp;
 		}
-
 		return Sv;
 	}
 
-	Real AnalyticComplexChooserEngine::underlying() const {
-		return process_->x0();
-	}
+	//Real AnalyticComplexChooserEngine::underlying() const {
+	//return process_->x0();
+	//}
 
-	
+
 	Real AnalyticComplexChooserEngine::strike(Option::Type optionType) const {
 		if (optionType == Option::Type::Call)
 			return arguments_.strikeCall;
@@ -136,31 +129,37 @@ namespace QuantLib {
 			return arguments_.strikePut;
 	}
 
-	Time AnalyticComplexChooserEngine::residualTime() const {
+	Time AnalyticComplexChooserEngine::choosingDate() const {
+		return process_->time(arguments_.choosingDate);
+	}
+	Time AnalyticComplexChooserEngine::putMaturity() const {
+		return process_->time(arguments_.exercisePut->lastDate());
+	}
+	Time AnalyticComplexChooserEngine::callMaturity() const {
 		return process_->time(arguments_.exerciseCall->lastDate());
 	}
 
 	//Je ne sais pas pour le strike et je ne sais pas si il faut utiliser cette volatility dans GBlackScholes
 	Volatility AnalyticComplexChooserEngine::volatility() const {
-		return process_->blackVolatility()->blackVol(residualTime(), arguments_.strikeCall);
+		return process_->blackVolatility()->blackVol(choosingDate(), arguments_.strikeCall);
 	}
 
-	Rate AnalyticComplexChooserEngine::dividendYield() const {
-		return process_->dividendYield()->zeroRate(residualTime(),
+	Rate AnalyticComplexChooserEngine::dividendYield(Time t) const {
+		return process_->dividendYield()->zeroRate(t,
 			Continuous, NoFrequency);
 	}
 
-	DiscountFactor AnalyticComplexChooserEngine::dividendDiscount() const {
-		return process_->dividendYield()->discount(residualTime());
+	DiscountFactor AnalyticComplexChooserEngine::dividendDiscount(Time t) const {
+		return process_->dividendYield()->discount(t);
 	}
 
-	Rate AnalyticComplexChooserEngine::riskFreeRate() const {
-		return process_->riskFreeRate()->zeroRate(residualTime(), Continuous,
+	Rate AnalyticComplexChooserEngine::riskFreeRate(Time t) const {
+		return process_->riskFreeRate()->zeroRate(t, Continuous,
 			NoFrequency);
 	}
 
-	DiscountFactor AnalyticComplexChooserEngine::riskFreeDiscount() const {
-		return process_->riskFreeRate()->discount(residualTime());
+	DiscountFactor AnalyticComplexChooserEngine::riskFreeDiscount(Time t) const {
+		return process_->riskFreeRate()->discount(t);
 	}
 
 }
