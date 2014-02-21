@@ -111,13 +111,13 @@ namespace QuantLib {
 		Real bar = barrier();
 		Real under = underlying();
 		Real resi = residualTime();
-		std::cout << resi << std::endl;
+		//std::cout << resi << std::endl;
 		Real rateI = riskFreeRate();
 		Real divi = dividendYield();
 		Real T1 = coverEventTime();
-		std::cout << T1	<< std::endl;
+		//std::cout << T1	<< std::endl;
 		Real b = riskFreeRate()-dividendYield();
-
+		
 		if (strike()>barrier())
 		{
 

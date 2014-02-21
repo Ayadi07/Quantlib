@@ -29,7 +29,7 @@ namespace QuantLib {
 
 		BlackScholesCalculator bsCalculator(Real spot, Option::Type optionType) const;
 		Real CriticalValueChooser() const;
-		Real ComplexChosser() const;
+		Real ComplexChooser() const;
 	};
 }
 

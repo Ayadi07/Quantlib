@@ -19,10 +19,10 @@ namespace QuantLib {
 	}
 
 	void AnalyticComplexChooserEngine::calculate() const {
-		results_.value=ComplexChosser();
+		results_.value=ComplexChooser();
 	}
 
-	Real AnalyticComplexChooserEngine::ComplexChosser() const{
+	Real AnalyticComplexChooserEngine::ComplexChooser() const{
 		Real S = process_->x0();
 		Real b;
 		Real v;

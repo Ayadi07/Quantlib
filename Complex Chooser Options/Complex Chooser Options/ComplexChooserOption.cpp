@@ -9,7 +9,9 @@ namespace QuantLib {
 		Real strikeCall,
 		Real strikePut,
 		const boost::shared_ptr<Exercise>& exerciseCall,
-		const boost::shared_ptr<Exercise>& exercisePut)
+		const boost::shared_ptr<StrikedTypePayoff>& payoffCall,
+		const boost::shared_ptr<Exercise>& exercisePut,
+		const boost::shared_ptr<StrikedTypePayoff>& payoffPut)
 		:OneAssetOption(boost::shared_ptr<Payoff>(
 		new PlainVanillaPayoff(Option::Call, strikeCall)),exerciseCall),
 		choosingDate_(choosingDate),
