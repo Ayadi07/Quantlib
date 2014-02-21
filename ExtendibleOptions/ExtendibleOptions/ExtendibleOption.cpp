@@ -5,13 +5,13 @@ namespace QuantLib {
 	ExtendibleOption::ExtendibleOption(Option::Type type,
 		ExtendibleOptionType::Type writerHolder,\
 		Real premium,
-		Date secondMaturityDate,
+		Date secondExpiryDate,
 		Real secondStrike,
 		const boost::shared_ptr<StrikedTypePayoff>& payoff,
 		const boost::shared_ptr<Exercise>& exercise):OneAssetOption(payoff,exercise),
 		writerHolder_(writerHolder),
 		premium_(premium),
-		secondMaturityDate_(secondMaturityDate),
+		secondExpiryDate_(secondExpiryDate),
 		secondStrike_(secondStrike)
 	{
 	}
@@ -23,14 +23,14 @@ namespace QuantLib {
 			QL_REQUIRE(moreArgs != 0, "wrong argument type");
 			moreArgs->writerHolder=writerHolder_;
 			moreArgs->premium=premium_;
-			moreArgs->secondMaturityDate=secondMaturityDate_;
+			moreArgs->secondExpiryDate=secondExpiryDate_;
 			moreArgs->secondStrike=secondStrike_;
 	}
 
 	void ExtendibleOption::	arguments::validate() const {
 		OneAssetOption::arguments::validate();
-		QL_REQUIRE(secondMaturityDate != Date() , " no extending date given");
-		QL_REQUIRE(secondMaturityDate <=exercise->lastDate(),"extending date is earlier than or equal to first maturity date");
+		QL_REQUIRE(secondExpiryDate != Date() , " no extending date given");
+		QL_REQUIRE(secondExpiryDate <=exercise->lastDate(),"extending date is earlier than or equal to first maturity date");
 	}
 
 	ExtendibleOption::~ExtendibleOption(void)

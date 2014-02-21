@@ -19,7 +19,7 @@ namespace QuantLib{
 			Option::Type type,
 			ExtendibleOptionType::Type writerHolder,
 			Real premium,
-			Date secondMaturityDate,
+			Date secondExpiryDate,
 			Real secondStrike,
 			const boost::shared_ptr<StrikedTypePayoff>& payoff,
 			const boost::shared_ptr<Exercise>& exercise);
@@ -28,7 +28,7 @@ namespace QuantLib{
 	protected:
 		ExtendibleOptionType::Type writerHolder_;
 		Real premium_;
-		Date secondMaturityDate_;
+		Date secondExpiryDate_;
 		Real secondStrike_;
 	};
 	class ExtendibleOption::arguments : public OneAssetOption::arguments {
@@ -36,7 +36,7 @@ namespace QuantLib{
 		arguments();
 		ExtendibleOptionType::Type writerHolder;
 		Real premium;
-		Date secondMaturityDate;
+		Date secondExpiryDate;
 		Real secondStrike;
 
 		void validate() const;
