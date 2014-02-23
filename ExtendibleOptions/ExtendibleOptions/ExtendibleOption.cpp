@@ -29,8 +29,10 @@ namespace QuantLib {
 
 	void ExtendibleOption::	arguments::validate() const {
 		OneAssetOption::arguments::validate();
-		QL_REQUIRE(secondExpiryDate != Date() , " no extending date given");
+		QL_REQUIRE(premium < 0,"negative premium not allowed");
+		QL_REQUIRE(secondExpiryDate != Date() , "no extending date given");
 		QL_REQUIRE(secondExpiryDate <=exercise->lastDate(),"extending date is earlier than or equal to first maturity date");
+
 	}
 
 	ExtendibleOption::~ExtendibleOption(void)

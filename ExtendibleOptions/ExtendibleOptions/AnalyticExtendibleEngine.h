@@ -16,7 +16,7 @@ namespace QuantLib {
 		boost::shared_ptr<GeneralizedBlackScholesProcess> process_;
 		Real strike() const;
 		Time firstExpiryTime() const;
-		Time SecondExpiryTime() const;
+		Time secondExpiryTime() const;
 		Volatility volatility() const;
 		Rate riskFreeRate() const;
 		Rate dividendYield() const;
@@ -28,6 +28,7 @@ namespace QuantLib {
 		Real I2Put() const;
 		BlackScholesCalculator bsCalculator(Real spot, Option::Type optionType) const;
 		Real M2(Real a, Real b, Real c, Real d, Real rho) const;
+		Real M(Real a, Real b, Real rho) const;
 		Real N2(Real a, Real b) const;
 		Real y1(Option::Type) const;
 		Real y2(Option::Type) const;
