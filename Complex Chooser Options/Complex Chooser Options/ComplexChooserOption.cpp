@@ -12,8 +12,7 @@ namespace QuantLib {
 		const boost::shared_ptr<StrikedTypePayoff>& payoffCall,
 		const boost::shared_ptr<Exercise>& exercisePut,
 		const boost::shared_ptr<StrikedTypePayoff>& payoffPut)
-		:OneAssetOption(boost::shared_ptr<Payoff>(
-		new PlainVanillaPayoff(Option::Call, strikeCall)),exerciseCall),
+		:OneAssetOption(payoffCall, exerciseCall),
 		choosingDate_(choosingDate),
 		strikeCall_(strikeCall),
 		strikePut_(strikePut),
@@ -26,8 +25,7 @@ namespace QuantLib {
 	//:OneAssetOption(boost::shared_ptr<Payoff>(
 	//new PlainVanillaPayoff(Option::Call, strikeCall)),exerciseCall),
 	//any ideas guys?
-	void ComplexChooserOption::setupArguments(
-		PricingEngine::arguments* args) const {
+	void ComplexChooserOption::setupArguments(PricingEngine::arguments* args) const {
 			OneAssetOption::setupArguments(args);
 			ComplexChooserOption::arguments* moreArgs =
 				dynamic_cast<ComplexChooserOption::arguments*>(args);
@@ -35,17 +33,24 @@ namespace QuantLib {
 			moreArgs->choosingDate=choosingDate_;
 			moreArgs->strikeCall=strikeCall_;
 			moreArgs->strikePut=strikePut_;
-			moreArgs->exerciseCall=exerciseCall_;
-			moreArgs->exercisePut=exercisePut_;
+			moreArgs->exerciseCall = exerciseCall_;
+			moreArgs->exercisePut = exercisePut_;
 
 	}
+
+	/*ComplexChooserOption::arguments::arguments()
+	{
+		choosingDate = Null<Date>();
+		strikeCall = Null<Real>();
+		strikePut = Null<Real>();		
+	}*/
 
 	void ComplexChooserOption::arguments::validate() const {
 		OneAssetOption::arguments::validate();
 		QL_REQUIRE(choosingDate != Date() , " no choosing date given");
-		QL_REQUIRE(choosingDate > exerciseCall->lastDate(),
+		QL_REQUIRE(choosingDate < exerciseCall->lastDate(),
 			"choosing date later than or equal to Call maturity date");
-		QL_REQUIRE(choosingDate > exercisePut->lastDate(),
+		QL_REQUIRE(choosingDate < exercisePut->lastDate(),
 			"choosing date later than or equal to Put maturity date");
 	}
 

@@ -1,6 +1,7 @@
 #include <ql/processes/blackscholesprocess.hpp>
 #include <ql/math/distributions/normaldistribution.hpp>
 #include "ComplexChooserOption.h"
+#include <ql/pricingengines/blackscholescalculator.hpp>
 
 namespace QuantLib {
 	class AnalyticComplexChooserEngine : public ComplexChooserOption::engine
