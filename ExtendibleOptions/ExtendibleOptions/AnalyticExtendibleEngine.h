@@ -1,6 +1,8 @@
 #include <ql/processes/blackscholesprocess.hpp>
 #include <ql/math/distributions/normaldistribution.hpp>
+#include <ql/pricingengines/blackscholescalculator.hpp>
 #include "ExtendibleOption.h"
+
 
 namespace QuantLib {
 

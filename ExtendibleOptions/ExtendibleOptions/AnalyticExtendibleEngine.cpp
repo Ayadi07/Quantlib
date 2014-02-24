@@ -2,6 +2,7 @@
 #include <ql/quantlib.hpp>
 #include <ql/math/distributions/normaldistribution.hpp>
 #include <limits>
+#include <ql/math/solvers1d/newton.hpp>
 
 
 
@@ -19,7 +20,7 @@ namespace QuantLib {
 	void AnalyticExtendibleEngine::calculate() const
 	{
 		//Spot
-		Real S = process_->x0;
+		Real S = process_->x0();
 		Real r = riskFreeRate();
 		Real b = r - dividendYield();
 		Real X1 = strike();
@@ -41,7 +42,7 @@ namespace QuantLib {
 		DiscountFactor growth = dividendDiscount(t1);
 		//calculate payoff discount factor assuming continuous compounding 
 		DiscountFactor discount = riskFreeDiscount(t1);
-		Real result;
+		Real result = 0;
 		Real minusInf=-std::numeric_limits<Real>::infinity();
 
 		if(arguments_.writerHolder==ExtendibleOptionType::H){
@@ -111,7 +112,8 @@ namespace QuantLib {
 			Real di = dc - 0;
 			Real epsilon = 0.001;
 
-			//Newton-Raphson prosess
+
+			//Newton-Raphson process
 			while (abs(yi) > epsilon){
 				Sv = Sv - yi / di;
 
@@ -139,29 +141,30 @@ namespace QuantLib {
 		Real val=X1-X2*std::exp(-r*(T2-t1));
 		if(A< val){	
 			return std::numeric_limits<Real>::infinity();
+		} else {
+			BlackScholesCalculator bs = bsCalculator(Sv, Option::Type::Call);
+			Real ci = bs.value();	
+			Real dc = bs.delta();
+
+			Real yi = ci - A - Sv + X1;
+			//da/ds = 0
+			Real di = dc - 0;
+			Real epsilon = 0.001;
+
+
+			//Newton-Raphson process
+			while (abs(yi) > epsilon){
+				Sv = Sv - yi / di;
+
+				bs = bsCalculator(Sv, Option::Type::Call);
+				ci = bs.value();
+				dc = bs.delta();
+
+				yi = ci - A - Sv + X1;
+				di = dc - 0;
+			}
+			return Sv;
 		}
-		else
-		{BlackScholesCalculator bs = bsCalculator(Sv, Option::Type::Call);
-		Real ci = bs.value();	
-		Real dc = bs.delta();
-
-		Real yi = ci - A - Sv + X1;
-		//da/ds = 0
-		Real di = dc - 0;
-		Real epsilon = 0.001;
-
-		//Newton-Raphson prosess
-		while (abs(yi) > epsilon){
-			Sv = Sv - yi / di;
-
-			bs = bsCalculator(Sv, Option::Type::Call);
-			ci = bs.value();
-			dc = bs.delta();
-
-			yi = ci - A - Sv + X1;
-			di = dc - 0;
-		}
-		return Sv;}
 	}
 
 	Real AnalyticExtendibleEngine::I1Put() const{

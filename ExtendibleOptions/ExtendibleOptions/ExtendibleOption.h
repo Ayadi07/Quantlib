@@ -33,7 +33,7 @@ namespace QuantLib{
 	};
 	class ExtendibleOption::arguments : public OneAssetOption::arguments {
 	public:
-		arguments();
+		//arguments();
 		ExtendibleOptionType::Type writerHolder;
 		Real premium;
 		Date secondExpiryDate;

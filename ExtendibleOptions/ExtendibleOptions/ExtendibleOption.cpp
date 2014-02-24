@@ -1,9 +1,9 @@
-
+#include <ql/quantlib.hpp>
 #include "ExtendibleOption.h"
 
 namespace QuantLib {
 	ExtendibleOption::ExtendibleOption(Option::Type type,
-		ExtendibleOptionType::Type writerHolder,\
+		ExtendibleOptionType::Type writerHolder,
 		Real premium,
 		Date secondExpiryDate,
 		Real secondStrike,
@@ -29,9 +29,9 @@ namespace QuantLib {
 
 	void ExtendibleOption::	arguments::validate() const {
 		OneAssetOption::arguments::validate();
-		QL_REQUIRE(premium < 0,"negative premium not allowed");
+		QL_REQUIRE(premium > 0,"negative premium not allowed");
 		QL_REQUIRE(secondExpiryDate != Date() , "no extending date given");
-		QL_REQUIRE(secondExpiryDate <=exercise->lastDate(),"extending date is earlier than or equal to first maturity date");
+		QL_REQUIRE(secondExpiryDate >= exercise->lastDate(),"extending date is earlier than or equal to first maturity date");
 
 	}
 
