@@ -19,14 +19,6 @@ namespace QuantLib {
 			const boost::shared_ptr<StrikedTypePayoff>& payoff,
 			const boost::shared_ptr<Exercise>& exercise);
 		void setupArguments(PricingEngine::arguments*) const;
-
-		Volatility impliedVolatility(
-			Real price,
-			const boost::shared_ptr<GeneralizedBlackScholesProcess>& process,
-			Real accuracy = 1.0e-4,
-			Size maxEvaluations = 100,
-			Volatility minVol = 1.0e-7,
-			Volatility maxVol = 4.0) const;
 	protected:
 		PartialBarrier::Type barrierType_;
 		Real barrier_;
