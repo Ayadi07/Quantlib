@@ -34,6 +34,9 @@ namespace QuantLib {
 		Time T = choosingDate();
 
 		Real i = CriticalValueChooser();
+		std::cout << "Critical value :" << i << std::endl;
+		i = 51.1158;
+
 		b=riskFreeRate(choosingDate()) - dividendYield(choosingDate());
 		v = volatility(T);
 		Real d1 = (log(S / i) + (b + pow(v, 2) / 2)*T) / (v*sqrt(T));

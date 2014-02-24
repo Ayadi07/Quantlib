@@ -32,50 +32,6 @@ void PartialTimeBarrierOption::setupArguments(PricingEngine::arguments* args) co
 	moreArgs->coverEventDate = coverEventDate_;
 }
 
-
-Volatility PartialTimeBarrierOption::impliedVolatility(
-	Real targetValue,
-	const boost::shared_ptr<GeneralizedBlackScholesProcess>& process,
-	Real accuracy,
-	Size maxEvaluations,
-	Volatility minVol,
-	Volatility maxVol) const {
-
-		QL_REQUIRE(!isExpired(), "option expired");
-
-		boost::shared_ptr<SimpleQuote> volQuote(new SimpleQuote);
-
-		boost::shared_ptr<GeneralizedBlackScholesProcess> newProcess =
-			detail::ImpliedVolatilityHelper::clone(process, volQuote);
-
-
-		boost::scoped_ptr<PricingEngine> engine;
-		switch (exercise_->type()) {
-		case Exercise::European:
-			////////////////On va implementer la solution analytique sur les pappiers 
-			////////////////dans une classe AnalyticPartialTimeBarrierEngine
-			engine.reset(new AnalyticBarrierEngine(newProcess));
-			////////////////On va implementer la solution analytique sur les pappiers 
-			////////////////dans une classe AnalyticPartialTimeBarrierEngine
-			break;
-		case Exercise::American:
-		case Exercise::Bermudan:
-			QL_FAIL("engine not available for non-European partial-time barrier option");
-			break;
-		default:
-			QL_FAIL("unknown exercise type");
-		}
-
-		return detail::ImpliedVolatilityHelper::calculate(*this,
-			*engine,
-			*volQuote,
-			targetValue,
-			accuracy,
-			maxEvaluations,
-			minVol, maxVol);
-}
-
-
 PartialTimeBarrierOption::arguments::arguments()
 	: barrierType(PartialBarrier::Type(-1)), barrier(Null<Real>()),
 	rebate(Null<Real>()), coverEventDate(Null<Date>()) {}
