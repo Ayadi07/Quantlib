@@ -38,13 +38,6 @@ namespace QuantLib {
 
 	}
 
-	/*ComplexChooserOption::arguments::arguments()
-	{
-		choosingDate = Null<Date>();
-		strikeCall = Null<Real>();
-		strikePut = Null<Real>();		
-	}*/
-
 	void ComplexChooserOption::arguments::validate() const {
 		OneAssetOption::arguments::validate();
 		QL_REQUIRE(choosingDate != Date() , " no choosing date given");

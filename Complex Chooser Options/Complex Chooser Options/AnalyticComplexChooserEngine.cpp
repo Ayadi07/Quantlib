@@ -29,8 +29,8 @@ namespace QuantLib {
 		Real r = riskFreeRate(choosingDate());
 		Real Xc = arguments_.strikeCall;
 		Real Xp = arguments_.strikePut;
-		Time Tc = callMaturity();
-		Time Tp = putMaturity();
+		Time Tc = callMaturity()-choosingDate();
+		Time Tp = putMaturity()-choosingDate();
 		Time T = choosingDate();
 
 		Real i = CriticalValueChooser();
@@ -40,18 +40,27 @@ namespace QuantLib {
 		b=riskFreeRate(choosingDate()) - dividendYield(choosingDate());
 		v = volatility(T);
 		Real d1 = (log(S / i) + (b + pow(v, 2) / 2)*T) / (v*sqrt(T));
+		std::cout<< "D1 : " << d1 << std::endl;
 		Real d2 = d1 - v*sqrt(T);
+		std::cout<< "D2 : " << d2 << std::endl;
+
 
 		b=riskFreeRate(callMaturity()) - dividendYield(callMaturity());
 		v = volatility(Tc);
 		Real y1 = (log(S / Xc) + (b + pow(v, 2) / 2)*Tc) / (v*sqrt(Tc));
+		std::cout<< "y1 : " << y1 << std::endl;
 
 		b=riskFreeRate(putMaturity()) - dividendYield(putMaturity());
 		v = volatility(Tp);
 		Real y2 = (log(S / Xp) + (b + pow(v, 2) / 2)*Tp) / (v*sqrt(Tp));
+		std::cout<< "y2 : " << y2 << std::endl;
 
 		Real rho1 = sqrt(T / Tc);
+		std::cout<< "T : " << T << std::endl;
+		std::cout<< "Tc : " << Tc << std::endl;
+		std::cout<< "rho1 : " << rho1 << std::endl;
 		Real rho2 = sqrt(T / Tp);
+		std::cout<< "rho2 : " << rho2 << std::endl;
 		b=riskFreeRate(callMaturity()) - dividendYield(callMaturity());
 		r = riskFreeRate(callMaturity());
 		Real ComplexChooser = S * exp((b - r)*Tc) *  BivariateCumulativeNormalDistributionDr78(rho1)(d1, y1) 
@@ -76,7 +85,7 @@ namespace QuantLib {
 		boost::shared_ptr<PlainVanillaPayoff > vanillaPayoff;
 		if (optionType == Option::Type::Call){
 			//TC-T
-			Time t=callMaturity()-choosingDate();
+			Time t=callMaturity()-choosingDate()-choosingDate();
 			//payoff for a Call Option
 			vanillaPayoff = boost::shared_ptr<PlainVanillaPayoff>(new PlainVanillaPayoff(Option::Type::Call, strike(Option::Type::Call)));
 			//QuantLib requires sigma * sqrt(T) rather than just sigma/volatility
@@ -88,7 +97,7 @@ namespace QuantLib {
 		}
 		else{
 
-			Time t=putMaturity()-choosingDate();			
+			Time t=putMaturity()-choosingDate()-choosingDate();			
 			vanillaPayoff = boost::shared_ptr<PlainVanillaPayoff>(new PlainVanillaPayoff(Option::Type::Put, strike(Option::Type::Put)));
 			vol = volatility(t) * std::sqrt(t);
 			growth = dividendDiscount(t);

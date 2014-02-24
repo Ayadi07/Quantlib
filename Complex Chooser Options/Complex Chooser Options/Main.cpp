@@ -18,12 +18,12 @@ int main(int, char*[])
 	std::cout << std::endl;
 	// set up dates
 	Calendar calendar = TARGET();
-	Date todaysDate(25, December, 2013);
-	Date settlementDate(27, December, 2013);
+	Date todaysDate(3, February, 2014);
+	Date settlementDate(5, February, 2014);
 	Settings::instance().evaluationDate() = todaysDate;
-	Date choosingDate(27, March, 2014);
-	Date maturityCall(27, July, 2014);
-	Date maturityPut(27, August, 2014);
+	Date choosingDate(settlementDate + 90);
+	Date maturityCall(choosingDate + 180);
+	Date maturityPut(choosingDate + 210);
 	DayCounter dayCounter = Actual360();
 
 	//Option parameter
