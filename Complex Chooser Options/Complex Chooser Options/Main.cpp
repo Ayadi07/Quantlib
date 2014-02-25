@@ -75,7 +75,22 @@ int main(int, char*[])
 	complexChooserOption.setPricingEngine(boost::shared_ptr<PricingEngine>(
 		new AnalyticComplexChooserEngine(bsmProcess)));
 
-	std::cout << "Complex Chooser Option : " << complexChooserOption.NPV() << std::endl;
+	std::cout << "------------------------------------------------------"<<std::endl;
+	std::cout << "S:" << underlying<< std::endl;
+	std::cout << "Choosing date          : " << choosingDate<< std::endl;
+	std::cout << "Expiry date for Call Tc: " << maturityCall<< std::endl;
+	std::cout << "Expiry date for Put  Tp: " << maturityPut<< std::endl;
+	std::cout << "Strike for Call      Xc: " << strikeCall<< std::endl;
+	std::cout << "Strike for Put       Xp: " << strikePut<< std::endl;
+	std::cout << "dividend              d: " << dividendYield<< std::endl;
+	std::cout << "risk free rate        r: " << riskFreeRate<< std::endl;
+	std::cout << "Volatility          vol: " << volatility<< std::endl;
+	std::cout << std::endl;
+	std::cout << "------------------------------------------------------"<<std::endl;
+	std::cout << " *_Intermediate variables values_* "<<std::endl;
+	
+	std::cout << " Complex Chooser Option: " << complexChooserOption.NPV() << std::endl;
+
 	std::cin.get();
 	return 0;
 

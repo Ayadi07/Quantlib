@@ -92,9 +92,10 @@ int main(int, char*[])
 
 			partialTimeBarrierOption.setPricingEngine(boost::shared_ptr<PricingEngine>(
 				new AnalyticPartialTimeBarrierEngine(bsmProcess)));
-
+			std::cout << "--------------------------------------------------------------------" <<std::endl;
 			std::cout << "Underlying : " << v_underlying[i]<< "  Strike : " << v_strike[i] << "  CoverEventTime : " << v_coverEventTime[j] << std::endl;
-			std::cout << "Partial Time End Barrier Call Type B1 option " << partialTimeBarrierOption.NPV()<< std::endl;
+			std::cout << "Partial-Time-End-Barrier Call Type B1: Down Out= " << partialTimeBarrierOption.NPV()<< std::endl;
+			std::cout << "--------------------------------------------------------------------" <<std::endl;
 		}
 		std::cout << std::endl;
 	}
