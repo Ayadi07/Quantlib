@@ -34,6 +34,8 @@ namespace QuantLib {
 		std::cout << "T2 : " << T2 << std::endl;
 		std::cout << "t1 : " << t1 << std::endl;
 		std::cout << "A : " << A << std::endl;
+		std::cout << "S : " << S << std::endl;
+
 
 		Real z1 = this->z1();
 		std::cout << "z1 : " << z1 << std::endl;
@@ -67,16 +69,16 @@ namespace QuantLib {
 				std::cout << "vol : " << vol << std::endl;
 
 				Real resN2 = N2(y1 , z2);
-				std::cout << "N2(y1 , z2) : " << resN2 << std::endl;
+				std::cout << "\nN2(y1 , z2) : " << resN2 << std::endl;
 
 				resN2 = N2(y1 - vol*sqrt(t1), z2 - vol*sqrt(t1));
-				std::cout << "N2(y1 - vol*sqrt(t1), z2 - vol*sqrt(t1)) : " << resN2 << std::endl;
+				std::cout << "\nN2(y1 - vol*sqrt(t1), z2 - vol*sqrt(t1)) : " << resN2 << std::endl;
 
 				Real resM2 = M2(y1, y2, -10, z1, rho);
-				std::cout << "M2(y1, y2, -10, z1, rho) : " << resM2 << std::endl;
+				std::cout << "\nM2(y1, y2, -10, z1, rho) : " << resM2 << std::endl;
 
 				resM2 = M2(y1-vol*sqrt(t1), y2 - vol*sqrt(t1), -10, z1-vol*sqrt(T2), rho);
-				std::cout << "M2(y1-vol*sqrt(t1), y2 - vol*sqrt(t1), -10, z1-vol*sqrt(T2), rho) : " << resM2 << std::endl;
+				std::cout << "\nM2(y1-vol*sqrt(t1), y2 - vol*sqrt(t1), -10, z1-vol*sqrt(T2), rho) : " << resM2 << std::endl;
 
 
 
@@ -84,7 +86,9 @@ namespace QuantLib {
 				//instantiate payoff function for a call 
 				boost::shared_ptr<PlainVanillaPayoff> vanillaCallPayoff =
 					boost::shared_ptr<PlainVanillaPayoff>(new PlainVanillaPayoff(Option::Type::Call, X1));
-				result = BlackScholesCalculator(vanillaCallPayoff, S, growth, vol, discount).value()
+				Real BSM = BlackScholesCalculator(vanillaCallPayoff, S, growth, vol*sqrt(t1), discount).value();
+				std::cout << "\nBSM : " << BSM << std::endl;
+				result = BSM 
 					+ S*exp((b - r)*T2)*M2(y1, y2, minusInf, z1, rho)
 					- X2*exp(-r*T2)*M2(y1 - vol*sqrt(t1), y2 - vol*sqrt(t1), minusInf, z1 - vol*sqrt(T2), rho)
 					- S*exp((b - r)*t1)*N2(y1, z2) + X1*exp(-r*t1)*N2(y1 - vol*sqrt(t1), z2 - vol*sqrt(t1))
@@ -96,7 +100,7 @@ namespace QuantLib {
 				//instantiate payoff function for a call 
 				boost::shared_ptr<PlainVanillaPayoff> vanillaPutPayoff =
 					boost::shared_ptr<PlainVanillaPayoff>(new PlainVanillaPayoff(Option::Type::Put, X1));
-				result = BlackScholesCalculator(vanillaPutPayoff, S, growth, vol, discount).value()
+				result = BlackScholesCalculator(vanillaPutPayoff, S, growth, vol*sqrt(t1), discount).value()
 					- S*exp((b - r)*T2)*M2(y1, y2, minusInf, -z1, rho)
 					+ X2*exp(-r*T2)*M2(y1 - vol*sqrt(t1), y2 - vol*sqrt(t1), minusInf, -z1 + vol*sqrt(T2), rho)
 					+ S*exp((b - r)*t1)*N2(z2, y2) - X1*exp(-r*t1)*N2(z2 - vol*sqrt(t1), y2 - vol*sqrt(t1))
@@ -107,13 +111,13 @@ namespace QuantLib {
 			{
 				boost::shared_ptr<PlainVanillaPayoff> vanillaCallPayoff =
 					boost::shared_ptr<PlainVanillaPayoff>(new PlainVanillaPayoff(Option::Type::Call, X1));
-				result = BlackScholesCalculator(vanillaCallPayoff, S, growth, vol, discount).value()
+				result = BlackScholesCalculator(vanillaCallPayoff, S, growth, vol*sqrt(t1), discount).value()
 					+ S*exp((b - r)*T2)*M(z1,-z2,-rho)
 					- X2*exp(-r*T2)*M(z1-vol*sqrt(T2),-z2+vol*sqrt(t1),-rho);
 			}else{
 				boost::shared_ptr<PlainVanillaPayoff> vanillaPutPayoff =
 					boost::shared_ptr<PlainVanillaPayoff>(new PlainVanillaPayoff(Option::Type::Put, X1));
-				result = BlackScholesCalculator(vanillaPutPayoff, S, growth, vol, discount).value()
+				result = BlackScholesCalculator(vanillaPutPayoff, S, growth, vol*sqrt(t1), discount).value()
 					+ X2*exp(-r*T2)*M(-z1+vol*sqrt(T2),z2-vol*sqrt(t1),-rho)
 					- S*exp((b - r)*T2)*M(-z1,z2,-rho);
 			}
@@ -177,7 +181,7 @@ namespace QuantLib {
 			Real dc = bs.delta();
 
 			Real yi = ci - A - Sv + X1;
-			//da/ds = 0
+			//da/ds = 1
 			Real di = dc - 1;
 			Real epsilon = 0.001;
 
@@ -211,8 +215,8 @@ namespace QuantLib {
 
 
 		Real yi = pi - A + Sv - X1;
-		//da/ds = 0
-		Real di = dc - 0;
+		//da/ds = 1
+		Real di = dc - 1;
 		Real epsilon = 0.001;
 
 		//Newton-Raphson prosess
@@ -224,7 +228,7 @@ namespace QuantLib {
 			dc = bs.delta();
 
 			yi = pi - A + Sv - X1;
-			di = dc - 0;
+			di = dc - 1;
 		}
 		return Sv;
 	}
@@ -291,9 +295,6 @@ namespace QuantLib {
 		}
 
 		//QuantLib requires sigma * sqrt(T) rather than just sigma/volatility
-		//
-		// ça c'est du code que j'ai trouvé sur internet mais je sais pas pourquoi 
-		//il faut multiplier par sqrt(t)
 		//
 		vol = volatility() * std::sqrt(t);
 		//calculate dividend discount factor assuming continuous compounding (e^-rt)
@@ -389,7 +390,7 @@ namespace QuantLib {
 		Real I1;
 		if (type == Option::Type::Call){
 			I1 = I1Call();
-			std::cout << "I1 : " << I1 << std::endl;
+			std::cout << "\t\tI1 : " << I1 << std::endl;
 			I1 = 86.7406;
 		}
 		else
