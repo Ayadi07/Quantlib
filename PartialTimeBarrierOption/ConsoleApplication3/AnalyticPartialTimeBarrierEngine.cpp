@@ -11,7 +11,6 @@ namespace QuantLib {
 	}
 
 	void AnalyticPartialTimeBarrierEngine::calculate() const {
-
 		boost::shared_ptr<PlainVanillaPayoff> payoff =
 			boost::dynamic_pointer_cast<PlainVanillaPayoff>(arguments_.payoff);
 		QL_REQUIRE(payoff, "non-plain payoff given");
@@ -21,8 +20,7 @@ namespace QuantLib {
 		Real strike = payoff->strike();
 		Real spot = process_->x0();
 		QL_REQUIRE(spot >= 0.0, "negative or null underlying given");
-		//QL_REQUIRE(!triggered(spot), "barrier touched");
-
+		
 		PartialBarrier::Type barrierType = arguments_.barrierType;
 
 		switch (payoff->optionType()) {
@@ -42,8 +40,6 @@ namespace QuantLib {
 			case PartialBarrier::UpInStart:
 				results_.value = CIA(-1);
 				break;
-				//Partial-Time-Start //end
-				//Partial-Time-End
 			case PartialBarrier::UpOutEndB1:
 				results_.value=CoB1();
 				break;
@@ -74,9 +70,9 @@ namespace QuantLib {
 			QL_FAIL("unknown Type");
 		}
 	}
-	Real AnalyticPartialTimeBarrierEngine::CoB2(PartialBarrier::Type barrierType) const
-	{
-		Real result;
+
+	Real AnalyticPartialTimeBarrierEngine::CoB2(PartialBarrier::Type barrierType) const{
+		Real result=0;
 		Real b = riskFreeRate()-dividendYield();
 		if(strike()<barrier()){
 			switch (barrierType)
@@ -101,46 +97,43 @@ namespace QuantLib {
 		}else
 			QL_FAIL("case: strike()>barrier(): is not implemented for OutEnd B2 type");
 		return 0;
-
 	}
-	Real AnalyticPartialTimeBarrierEngine::CoB1() const
-	{
 
+	Real AnalyticPartialTimeBarrierEngine::CoB1() const{
 		Real result = 0.0;
 		Real strike2 = strike();
 		Real bar = barrier();
 		Real under = underlying();
 		Real resi = residualTime();
-		//std::cout << resi << std::endl;
 		Real rateI = riskFreeRate();
 		Real divi = dividendYield();
 		Real T1 = coverEventTime();
-		//std::cout << T1	<< std::endl;
 		Real b = riskFreeRate()-dividendYield();
-		
 		if (strike()>barrier())
 		{
-
 			result = underlying()*std::exp((b-riskFreeRate())*residualTime());
 			result *=(M(d1(),e1(),rho())-HS(underlying(),barrier(),2*(mu()+1))*M(f1(),-e3(),-rho()));
 			result -=(strike()*std::exp(-riskFreeRate()*residualTime()))*(M(d2(),e2(),rho())-HS(underlying(),barrier(),2*mu())*M(f2(),-e4(),-rho()));
 			return result;
 		}else{
-			result = underlying()*std::exp((b - riskFreeRate())*residualTime());
-			result *=M(-g1(),-e1(),rho())-HS(underlying(),barrier(),2*(mu()+1))*M(-g3(),e3(),-rho());
-			result -= (strike()*std::exp(-riskFreeRate()*residualTime())*(M(-g2(), -e2(), rho()) - HS(underlying(), barrier(), 2 * mu())*M(-g4(), e4(), -rho())));
-			result -= underlying()*std::exp((dividendYield() - riskFreeRate())*residualTime())*(M(-d1(), -e1(), rho()) - HS(underlying(), barrier(), 2 * (mu() + 1))*M(-f1(), e3(), -rho()));
-			result += (strike()*std::exp(-riskFreeRate()*residualTime())*(M(-d2(), -e2(), rho()) - HS(underlying(), barrier(), 2 * mu())*M(-f2(), e4(), -rho())));
-			result += underlying()*std::exp((dividendYield() - riskFreeRate())*residualTime())*(M(g1(), e1(), rho()) - HS(underlying(), barrier(), 2 * (mu() + 1))*M(g3(), -e3(), -rho()));
-			result -= (strike()*std::exp(-riskFreeRate()*residualTime())*(M(g2(), e2(), rho()) - HS(underlying(), barrier(), 2 * mu())*M(g4(), -e4(), -rho())));
+			Real S1 = underlying()*std::exp((b-riskFreeRate())*residualTime());
+			Real X1 = (strike()*std::exp(-riskFreeRate()*residualTime()));
+			Real HS1 = HS(underlying(),barrier(),2*(mu()+1));
+			Real HS2 = HS(underlying(), barrier(), 2 * mu());
+			result = S1;
+			result *=(M(-g1(),-e1(),rho())-HS1*M(-g3(),e3(),-rho()));
+			result -=X1*(M(-g2(), -e2(), rho()) - HS2*M(-g4(), e4(), -rho()));
+			result -=S1*(M(-d1(), -e1(), rho()) - HS1*M(-f1(), e3(), -rho()));
+			result +=X1*(M(-d2(), -e2(), rho()) - HS2*M(-f2(), e4(), -rho()));
+			result +=S1*(M(g1(), e1(), rho()) - HS1*M(g3(), -e3(), -rho()));
+			result -=X1*(M(g2(), e2(), rho()) - HS2*M(g4(), -e4(), -rho()));
 			return result;
 		}
 	}
 
 	//arg n : -1 Up-and-In Call
 	//arg n :  1 Down-and-In Call 
-	Real AnalyticPartialTimeBarrierEngine::CIA(Integer eta) const
-	{
+	Real AnalyticPartialTimeBarrierEngine::CIA(Integer eta) const{
 		//Calcul Vannilla Call Option
 		boost::shared_ptr<EuropeanExercise> exercise =
 			boost::dynamic_pointer_cast<EuropeanExercise>(arguments_.exercise);
@@ -157,8 +150,7 @@ namespace QuantLib {
 		return europeanOption.NPV() - CA(eta);
 	}
 
-	Real AnalyticPartialTimeBarrierEngine::CA(Integer eta) const
-	{
+	Real AnalyticPartialTimeBarrierEngine::CA(Integer eta) const{
 		Real b = riskFreeDiscount()-dividendYield();
 		//Partial-Time-Start- OUT  Call Option calculation 
 		if(std::abs(eta)==1){
@@ -188,8 +180,8 @@ namespace QuantLib {
 	Time AnalyticPartialTimeBarrierEngine::residualTime() const {
 		return process_->time(arguments_.exercise->lastDate());
 	}
-	Time AnalyticPartialTimeBarrierEngine::coverEventTime() const
-	{
+
+	Time AnalyticPartialTimeBarrierEngine::coverEventTime() const{
 		return process_->time(arguments_.coverEventDate);
 	}
 
@@ -242,95 +234,91 @@ namespace QuantLib {
 	Real AnalyticPartialTimeBarrierEngine::f2() const{
 		return f1() - volatility(2)*std::sqrt(residualTime());
 	}
-	Real AnalyticPartialTimeBarrierEngine::M(Real a,Real b,Real rho) const 
-	{
 
+	Real AnalyticPartialTimeBarrierEngine::M(Real a,Real b,Real rho) const{
 		BivariateCumulativeNormalDistributionDr78 CmlNormDist(rho);
 		return CmlNormDist(a,b);
 	}
-	Real AnalyticPartialTimeBarrierEngine::rho() const
-	{
+
+	Real AnalyticPartialTimeBarrierEngine::rho() const{
 		return std::sqrt(coverEventTime()/residualTime());
 	}
-	Rate AnalyticPartialTimeBarrierEngine::mu() const {
+
+	Rate AnalyticPartialTimeBarrierEngine::mu() const{
 		Volatility vol = volatility(1);
-		return (dividendYield() - (vol * vol) / 2) / (vol * vol);
+		return ((riskFreeRate() - dividendYield()) - (vol * vol) / 2) / (vol * vol);
 	}
 
-	Real AnalyticPartialTimeBarrierEngine::d1()const
-	{
+	Real AnalyticPartialTimeBarrierEngine::d1()const{
 		Volatility vol = volatility(2);
 		Real b= riskFreeRate()-dividendYield();
 		Time T2=residualTime();
-		return (LOG(underlying()/strike())+(b+vol*vol/2)*T2)/(SQRT(T2)*vol);
+		return (std::log(underlying()/strike())+(b+vol*vol/2)*T2)/(SQRT(T2)*vol);
 	}
-	Real AnalyticPartialTimeBarrierEngine::d2()const
-	{
+	
+	Real AnalyticPartialTimeBarrierEngine::d2()const{
 		Volatility vol = volatility(2);
 		Time T2=residualTime();
 		return d1() - vol*SQRT(T2);
 	}
 
-	Real AnalyticPartialTimeBarrierEngine::e1()const
-	{
+	Real AnalyticPartialTimeBarrierEngine::e1()const{
 		Volatility vol = volatility(1);
 		Real b= riskFreeRate()-dividendYield();
 		Time T1=coverEventTime();
 		return (LOG(underlying()/barrier())+(b+vol*vol/2)*T1)/(SQRT(T1)*vol);
-
-
 	}
-	Real AnalyticPartialTimeBarrierEngine::e2()const
-	{
+	
+	Real AnalyticPartialTimeBarrierEngine::e2()const{
 		Volatility vol = volatility(1);
 		Time T1=coverEventTime();
 		return e1() - vol*SQRT(T1);
 	}
 
-	Real AnalyticPartialTimeBarrierEngine::e3()const
-	{
+	Real AnalyticPartialTimeBarrierEngine::e3()const{
 		Time T1=coverEventTime();
 		Real vol=volatility(1);
 		return e1()+(2*LOG(barrier()/underlying()) /(vol*SQRT(T1)));
 	}
 
-	Real AnalyticPartialTimeBarrierEngine::e4()const
-	{
+	Real AnalyticPartialTimeBarrierEngine::e4()const{
 		return e3()-volatility(1)*SQRT(coverEventTime());
 	}
 
-	Real AnalyticPartialTimeBarrierEngine::g1()const
-	{
+	Real AnalyticPartialTimeBarrierEngine::g1()const{
 		Volatility vol = volatility(2);
 		Real b= riskFreeRate()-dividendYield();
 		Time T2=residualTime();
 		return (LOG(underlying()/barrier())+(b+vol*vol/2)*T2)/(SQRT(T2)*vol);
 	}
-	Real AnalyticPartialTimeBarrierEngine::g2()const
-	{
+	
+	Real AnalyticPartialTimeBarrierEngine::g2()const{
 		Volatility vol = volatility(2);
 		Time T2=residualTime();
 		return g1() - vol*SQRT(T2);
 	}
+	
 	Real AnalyticPartialTimeBarrierEngine::g3()const{
 		Time T2=residualTime();
 		Real vol=volatility(2);
 		return g1()+(2*LOG(barrier()/underlying()) /(vol*SQRT(T2)));
 	}
+	
 	Real AnalyticPartialTimeBarrierEngine::g4()const{
 		Time T2=residualTime();
 		Real vol=volatility(2);
 		return g3()-vol*SQRT(T2);
 	}
-	Real AnalyticPartialTimeBarrierEngine::LOG(Real r) const
-	{
+	
+	Real AnalyticPartialTimeBarrierEngine::LOG(Real r) const{
 		return std::log(r);
 	}
+	
 	Real AnalyticPartialTimeBarrierEngine::SQRT(Real r) const{
 		return std::sqrt(r);
 	}
-	Real AnalyticPartialTimeBarrierEngine::HS(Real S, Real H, Real power) const
-	{
+	
+	Real AnalyticPartialTimeBarrierEngine::HS(Real S, Real H, Real power) const{
 		return std::pow((H/S),power);
 	}
 

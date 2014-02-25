@@ -7,9 +7,6 @@
 #include <ql\time\daycounters\actual360.hpp>
 #include <ql\termstructures\volatility\equityfx\blackconstantvol.hpp>
 
-
-
-
 using namespace QuantLib;
 int main(int, char*[])
 {
@@ -19,19 +16,16 @@ int main(int, char*[])
 	Date todaysDate(6, January, 2014);
 	Settings::instance().evaluationDate() = todaysDate;
 	Date settlementDate(8, January, 2014);
-	Date maturity(8, January, 2015);
+	Date maturity(settlementDate + 360);
 	DayCounter dayCounter = Actual360();
-	
-
-	
+		
 	std::vector<Date> v_coverEventTime;
 	//v_coverEventTime.push_back(settlementDate + 0);
 	v_coverEventTime.push_back(settlementDate + 90);
 	v_coverEventTime.push_back(settlementDate + 180);
 	v_coverEventTime.push_back(settlementDate + 270);
-	v_coverEventTime.push_back(settlementDate + 360);
+	//v_coverEventTime.push_back(settlementDate + 360);
 	
-
 	Real u1 = 95;
 	Real u2 = 105;
 	std::vector<Real> v_underlying;
@@ -55,7 +49,6 @@ int main(int, char*[])
 	Rate riskFreeRate = 0.1;
 	Volatility volatility = 0.25;
 
-	
 	for(int i=0; i<v_strike.size(); i++){
 		for(int j=0; j<v_coverEventTime.size(); j++){
 			
@@ -68,8 +61,6 @@ int main(int, char*[])
 				v_coverEventTime[j],
 				payoff,
 				europeanExercise);
-
-
 
 			//Handle setups
 			Handle<Quote> underlyingH(boost::shared_ptr<Quote>(new SimpleQuote(v_underlying[i])));
@@ -104,62 +95,9 @@ int main(int, char*[])
 
 			std::cout << "Underlying : " << v_underlying[i]<< "  Strike : " << v_strike[i] << "  CoverEventTime : " << v_coverEventTime[j] << std::endl;
 			std::cout << "Partial Time End Barrier Call Type B1 option " << partialTimeBarrierOption.NPV()<< std::endl;
-			
 		}
 		std::cout << std::endl;
 	}
-	
-/*	
-	//basic option
-	boost::shared_ptr<StrikedTypePayoff> payoff(new PlainVanillaPayoff(type, strike));
-	boost::shared_ptr<Exercise> europeanExercise(new EuropeanExercise(maturity));
-	PartialTimeBarrierOption partialTimeBarrierOption(PartialBarrier::Type::DownOutEndB1,
-	100,
-	0.0,
-	coverEventTime,
-	payoff,
-	europeanExercise);
-
-
-
-	//Handle setups
-	Handle<Quote> underlyingH(boost::shared_ptr<Quote>(new SimpleQuote(underlying)));
-
-	Handle<YieldTermStructure> flatTermStructure(
-	boost::shared_ptr<YieldTermStructure>(
-	new FlatForward(settlementDate,
-	riskFreeRate,
-	dayCounter)));
-
-	Handle<YieldTermStructure> flatDividendTS(
-	boost::shared_ptr<YieldTermStructure>(
-	new FlatForward(settlementDate,
-	dividendYield,
-	dayCounter)));
-
-	Handle<BlackVolTermStructure> flatVolTS(
-	boost::shared_ptr<BlackVolTermStructure>(
-	new BlackConstantVol(settlementDate,
-	calendar,
-	volatility,
-	dayCounter)));
-
-	boost::shared_ptr<BlackScholesMertonProcess> bsmProcess(
-	new BlackScholesMertonProcess(underlyingH,
-	flatDividendTS,
-	flatTermStructure,
-	flatVolTS));
-
-	partialTimeBarrierOption.setPricingEngine(boost::shared_ptr<PricingEngine>(
-	new AnalyticPartialTimeBarrierEngine(bsmProcess)));
-	*/
-	/*
-	for(int i=0; i<values.size(); i++){
-			std::cout << "Partial Time End Barrier Call Type B1 option " << values[i]<< std::endl;
-	}*/
 	std::cin.get();
-	/*
-	std::cout << "Partial Time End Barrier Call Type B1 option " << partialTimeBarrierOption.NPV()<< std::endl;
-	std::cin.get();*/
 	return 0;
 }
