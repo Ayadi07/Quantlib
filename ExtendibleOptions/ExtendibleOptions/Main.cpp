@@ -70,7 +70,7 @@ int main(int, char*[])
 	extendedHolderCall.setPricingEngine(boost::shared_ptr<PricingEngine>(
 		new AnalyticExtendibleEngine(bsmProcess)));
 
-	std::cout << extendedHolderCall.NPV() << std::endl;
+	std::cout << "Extendible Option : " << extendedHolderCall.NPV() << std::endl;
 
 	std::cin.get();
 

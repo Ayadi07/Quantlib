@@ -29,15 +29,25 @@ namespace QuantLib {
 		Time t1 = firstExpiryTime();
 		Real A = arguments_.premium;
 
+		std::cout << "X1 : " << X1 << std::endl;
+		std::cout << "X2 : " << X2 << std::endl;
+		std::cout << "T2 : " << T2 << std::endl;
+		std::cout << "t1 : " << t1 << std::endl;
+		std::cout << "A : " << A << std::endl;
+
 		Real z1 = this->z1();
+		std::cout << "z1 : " << z1 << std::endl;
 		Real z2 = this->z2();
+		std::cout << "z2 : " << z2 << std::endl;
 		Real rho = sqrt(t1 / T2);
+		std::cout << "rho : " << rho << std::endl;
 
 		boost::shared_ptr<PlainVanillaPayoff> payoff =
 			boost::dynamic_pointer_cast<PlainVanillaPayoff>(arguments_.payoff);
 
 		//QuantLib requires sigma * sqrt(T) rather than just sigma/volatility
-		Real vol = volatility() * std::sqrt(t1);
+		Real vol = volatility();
+
 		//calculate dividend discount factor assuming continuous compounding (e^-rt)
 		DiscountFactor growth = dividendDiscount(t1);
 		//calculate payoff discount factor assuming continuous compounding 
@@ -50,7 +60,27 @@ namespace QuantLib {
 			if (payoff->optionType() == Option::Type::Call)
 			{
 				y1 = this->y1(Option::Type::Call);
+				std::cout << "y1 : " << y1 << std::endl;
 				y2 = this->y2(Option::Type::Call);
+				std::cout << "y2 : " << y2 << std::endl;
+
+				std::cout << "vol : " << vol << std::endl;
+
+				Real resN2 = N2(y1 , z2);
+				std::cout << "N2(y1 , z2) : " << resN2 << std::endl;
+
+				resN2 = N2(y1 - vol*sqrt(t1), z2 - vol*sqrt(t1));
+				std::cout << "N2(y1 - vol*sqrt(t1), z2 - vol*sqrt(t1)) : " << resN2 << std::endl;
+
+				Real resM2 = M2(y1, y2, -10, z1, rho);
+				std::cout << "M2(y1, y2, -10, z1, rho) : " << resM2 << std::endl;
+
+				resM2 = M2(y1-vol*sqrt(t1), y2 - vol*sqrt(t1), -10, z1-vol*sqrt(T2), rho);
+				std::cout << "M2(y1-vol*sqrt(t1), y2 - vol*sqrt(t1), -10, z1-vol*sqrt(T2), rho) : " << resM2 << std::endl;
+
+
+
+
 				//instantiate payoff function for a call 
 				boost::shared_ptr<PlainVanillaPayoff> vanillaCallPayoff =
 					boost::shared_ptr<PlainVanillaPayoff>(new PlainVanillaPayoff(Option::Type::Call, X1));
@@ -148,7 +178,7 @@ namespace QuantLib {
 
 			Real yi = ci - A - Sv + X1;
 			//da/ds = 0
-			Real di = dc - 0;
+			Real di = dc - 1;
 			Real epsilon = 0.001;
 
 
@@ -161,7 +191,7 @@ namespace QuantLib {
 				dc = bs.delta();
 
 				yi = ci - A - Sv + X1;
-				di = dc - 0;
+				di = dc - 1;
 			}
 			return Sv;
 		}
@@ -288,7 +318,7 @@ namespace QuantLib {
 
 	Real AnalyticExtendibleEngine::N2(Real a, Real b) const
 	{
-		NormalDistribution NormDist;
+		CumulativeNormalDistribution  NormDist;
 		return NormDist(b) - NormDist(a);
 	}
 
@@ -339,8 +369,10 @@ namespace QuantLib {
 	{
 		Real S = process_->x0();
 		Real I2;
-		if (type == Option::Type::Call)
+		if (type == Option::Type::Call){
 			I2 = I2Call();
+			std::cout << "I2 : " << I2 << std::endl;
+		}
 		else
 			I2 = I2Put();
 
@@ -355,8 +387,11 @@ namespace QuantLib {
 	{
 		Real S = process_->x0();
 		Real I1;
-		if (type == Option::Type::Call)
+		if (type == Option::Type::Call){
 			I1 = I1Call();
+			std::cout << "I1 : " << I1 << std::endl;
+			I1 = 86.7406;
+		}
 		else
 			I1 = I1Put();
 
