@@ -49,6 +49,9 @@ int main(int, char*[])
 	Rate riskFreeRate = 0.1;
 	Volatility volatility = 0.25;
 
+	std::cout<<"Input arguments : "<<std::endl;
+	std::cout<<"Barrier : 100.0" << "   Risk free rate (r) : " << riskFreeRate << "   Cost of carry (b=r-q) : " << riskFreeRate-dividendYield <<std::endl;
+	std::cout<<"Volatility : " << volatility << std::endl << "Settlement date : " << settlementDate << "   Maturity date : " << maturity <<std::endl << std::endl;
 	for(int i=0; i<v_strike.size(); i++){
 		for(int j=0; j<v_coverEventTime.size(); j++){
 			
@@ -92,12 +95,11 @@ int main(int, char*[])
 
 			partialTimeBarrierOption.setPricingEngine(boost::shared_ptr<PricingEngine>(
 				new AnalyticPartialTimeBarrierEngine(bsmProcess)));
-			std::cout << "--------------------------------------------------------------------" <<std::endl;
+
 			std::cout << "Underlying : " << v_underlying[i]<< "  Strike : " << v_strike[i] << "  CoverEventTime : " << v_coverEventTime[j] << std::endl;
-			std::cout << "Partial-Time-End-Barrier Call Type B1: Down Out= " << partialTimeBarrierOption.NPV()<< std::endl;
-			std::cout << "--------------------------------------------------------------------" <<std::endl;
+			std::cout << "Partial Time End Barrier Call Type B1 option " << partialTimeBarrierOption.NPV()<< std::endl<<std::endl;
 		}
-		std::cout << std::endl;
+		std::cout << std::endl<<std::endl;
 	}
 	std::cin.get();
 	return 0;

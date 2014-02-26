@@ -1,6 +1,10 @@
 #include "PartialTimeBarrierOption.h"
 #include <ql/instruments/impliedvolatility.hpp>
+////////////////On va implementer la solution analytique sur les pappiers 
+////////////////dans une classe AnalyticPartialTimeBarrierEngine
 #include <ql/pricingengines/barrier/analyticbarrierengine.hpp>
+////////////////On va implementer la solution analytique sur les pappiers 
+////////////////dans une classe AnalyticPartialTimeBarrierEngine
 #include <ql/exercise.hpp>
 #include <boost/scoped_ptr.hpp>
 
@@ -51,7 +55,17 @@ void PartialTimeBarrierOption::arguments::validate() const {
 		QL_FAIL("unknown type");
 	}
 
-	QL_REQUIRE(coverEventDate >= exercise->lastDate(), "cover event date is greater than or equal to expiry date");
+	////////////////Je ne sais pas encore comment en peu comparer "coverEventDate" avec le "settlement"
+	////////////////il est important de savoir si on a entrer une date avant la vie de l'option.
+	/*ca ne marche pas!	
+	if((coverEventDate!=Null<Date>())&&(coverEventDate>=exercise->date))
+	{
+	QL_FAIL("Cover Event Date is greater than expiracy date");
+	}
+	*/
+	////////////////Je ne sais pas encore comment en peu comparer "coverEventDate" avec le "settlement"
+	////////////////il est important de savoir si on a entrer une date avant la vie de l'option.
+
 	QL_REQUIRE(barrier != Null<Real>(), "no barrier given");
 	QL_REQUIRE(rebate != Null<Real>(), "no rebate given");
 	QL_REQUIRE(coverEventDate != Null<Date>(), "no cover event date given");
