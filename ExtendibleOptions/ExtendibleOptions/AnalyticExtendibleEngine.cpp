@@ -29,20 +29,13 @@ namespace QuantLib {
 		Time t1 = firstExpiryTime();
 		Real A = arguments_.premium;
 
-		std::cout << "X1 : " << X1 << std::endl;
-		std::cout << "X2 : " << X2 << std::endl;
-		std::cout << "T2 : " << T2 << std::endl;
-		std::cout << "t1 : " << t1 << std::endl;
-		std::cout << "A : " << A << std::endl;
-		std::cout << "S : " << S << std::endl;
-
 
 		Real z1 = this->z1();
-		std::cout << "z1 : " << z1 << std::endl;
+		
 		Real z2 = this->z2();
-		std::cout << "z2 : " << z2 << std::endl;
+		
 		Real rho = sqrt(t1 / T2);
-		std::cout << "rho : " << rho << std::endl;
+		
 
 		boost::shared_ptr<PlainVanillaPayoff> payoff =
 			boost::dynamic_pointer_cast<PlainVanillaPayoff>(arguments_.payoff);
@@ -61,33 +54,14 @@ namespace QuantLib {
 			Real y1,y2;
 			if (payoff->optionType() == Option::Type::Call)
 			{
-				y1 = this->y1(Option::Type::Call);
-				std::cout << "y1 : " << y1 << std::endl;
-				y2 = this->y2(Option::Type::Call);
-				std::cout << "y2 : " << y2 << std::endl;
-
-				std::cout << "vol : " << vol << std::endl;
-
-				Real resN2 = N2(y1 , z2);
-				std::cout << "\nN2(y1 , z2) : " << resN2 << std::endl;
-
-				resN2 = N2(y1 - vol*sqrt(t1), z2 - vol*sqrt(t1));
-				std::cout << "\nN2(y1 - vol*sqrt(t1), z2 - vol*sqrt(t1)) : " << resN2 << std::endl;
-
-				Real resM2 = M2(y1, y2, -10, z1, rho);
-				std::cout << "\nM2(y1, y2, -10, z1, rho) : " << resM2 << std::endl;
-
-				resM2 = M2(y1-vol*sqrt(t1), y2 - vol*sqrt(t1), -10, z1-vol*sqrt(T2), rho);
-				std::cout << "\nM2(y1-vol*sqrt(t1), y2 - vol*sqrt(t1), -10, z1-vol*sqrt(T2), rho) : " << resM2 << std::endl;
-
-
-
-
+				y1 = this->y1(Option::Type::Call);				
+				y2 = this->y2(Option::Type::Call);			
+	
+				
 				//instantiate payoff function for a call 
 				boost::shared_ptr<PlainVanillaPayoff> vanillaCallPayoff =
 					boost::shared_ptr<PlainVanillaPayoff>(new PlainVanillaPayoff(Option::Type::Call, X1));
 				Real BSM = BlackScholesCalculator(vanillaCallPayoff, S, growth, vol*sqrt(t1), discount).value();
-				std::cout << "\nBSM : " << BSM << std::endl;
 				result = BSM 
 					+ S*exp((b - r)*T2)*M2(y1, y2, minusInf, z1, rho)
 					- X2*exp(-r*T2)*M2(y1 - vol*sqrt(t1), y2 - vol*sqrt(t1), minusInf, z1 - vol*sqrt(T2), rho)
@@ -372,7 +346,6 @@ namespace QuantLib {
 		Real I2;
 		if (type == Option::Type::Call){
 			I2 = I2Call();
-			std::cout << "I2 : " << I2 << std::endl;
 		}
 		else
 			I2 = I2Put();
@@ -390,7 +363,8 @@ namespace QuantLib {
 		Real I1;
 		if (type == Option::Type::Call){
 			I1 = I1Call();
-			std::cout << "\t\tI1 : " << I1 << std::endl;
+			//Error I1
+			//std::cout << "\t\tI1 : " << I1 << std::endl;
 			I1 = 86.7406;
 		}
 		else
