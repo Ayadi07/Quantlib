@@ -124,7 +124,7 @@ namespace QuantLib {
 		Real epsilon = 0.001;
 
 		//Newton-Raphson prosess
-		while (abs(yi) > epsilon){
+		while (std::fabs(yi) > epsilon){
 			Sv = Sv - yi / di;
 
 			bs=bsCalculator(Sv,Option::Type::Call);
