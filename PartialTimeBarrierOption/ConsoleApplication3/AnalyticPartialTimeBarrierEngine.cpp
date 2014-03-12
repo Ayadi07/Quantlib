@@ -20,54 +20,74 @@ namespace QuantLib {
 		Real strike = payoff->strike();
 		Real spot = process_->x0();
 		QL_REQUIRE(spot >= 0.0, "negative or null underlying given");
-		
+
 		PartialBarrier::Type barrierType = arguments_.barrierType;
+		PartialBarrier::Range barrierRange = arguments_.barrierRange;
 
 		switch (payoff->optionType()) {
 			//Call Option
 		case Option::Call:
 			switch (barrierType) {
 				//Partial-Time-Start
-			case PartialBarrier::DownOutStart:
-				results_.value = CA(1);
-				break;
-			case PartialBarrier::UpOutStart:
-				results_.value = CA(-1);
-				break;
-			case PartialBarrier::DownInStart:
-				results_.value = CIA(1);
-				break;
-			case PartialBarrier::UpInStart:
-				results_.value = CIA(-1);
-				break;
-			case PartialBarrier::UpOutEndB1:
-				results_.value=CoB1();
-				break;
-			case PartialBarrier::UpOutEndB2:
-				results_.value=CoB2(PartialBarrier::UpOutEndB2);
-				break;
-			case PartialBarrier::DownOutEndB1:
-				results_.value=CoB1();
-				break;
-			case PartialBarrier::DownOutEndB2:
-				results_.value=CoB2(PartialBarrier::DownOutEndB2);
-				break;
-			case PartialBarrier::UpInEnd:
-				QL_FAIL("Up and In Partial-Time-End Barrier is not implemented");
-				break;
-			case PartialBarrier::DownInEnd:
-				QL_FAIL("Down and In Partial-Time-End Barrier is not implemented");
-				break;
-				//Partial-Time-End //end
+			case PartialBarrier::Type::DownOut:
+				switch (barrierRange)
+				{
+				case PartialBarrier::Range::Start:
+					results_.value = CA(1);
+					break;
+				case PartialBarrier::Range::EndB1:
+					results_.value=CoB1();
+					break;
+				case PartialBarrier::Range::EndB2:
+					results_.value=CoB2(PartialBarrier::Type::DownOut);
+					break;
+				default:;
+				}break;
+			case PartialBarrier::Type::DownIn:
+				switch (barrierRange)
+				{
+				case PartialBarrier::Range::Start:
+					results_.value = CIA(1);
+					break;
+				case PartialBarrier::Range::End:
+					QL_FAIL("Down and In Partial-Time-End Barrier is not implemented");
+					break;
+				default:;
+				}break;
+			case PartialBarrier::Type::UpOut:
+				switch (barrierRange)
+				{
+				case PartialBarrier::Range::Start:
+					results_.value = CA(-1);
+					break;
+				case PartialBarrier::Range::EndB1:
+					results_.value=CoB1();
+					break;
+				case PartialBarrier::Range::EndB2:
+					results_.value=CoB2(PartialBarrier::Type::UpOut);
+					break;
+				default:;
+				}break;
+
+			case PartialBarrier::Type::UpIn:
+				switch (barrierRange)
+				{
+				case PartialBarrier::Range::Start:
+					results_.value = CIA(-1);
+					break;
+				case PartialBarrier::Range::End:
+					QL_FAIL("Up and In Partial-Time-End Barrier is not implemented");
+					break;
+				default:;
+				}break;
 			default:
 				QL_FAIL("unknown Partial-Time-Barrier barrierType");
-			}
-			break;
+			}break;
 		case Option::Put:
 			QL_FAIL("Partial-Time Barrier option Put is non-implemented");
 			break;
 		default:
-			QL_FAIL("unknown Type");
+			QL_FAIL("unknown Option Type");
 		}
 	}
 
@@ -77,12 +97,12 @@ namespace QuantLib {
 		if(strike()<barrier()){
 			switch (barrierType)
 			{
-			case PartialBarrier::DownOutEndB2:
+			case PartialBarrier::Type::DownOut:
 				result = underlying()*std::exp((b-riskFreeRate())*residualTime());
 				result *=(M(g1(),e1(),rho())-HS(underlying(),barrier(),2*(mu()+1))*M(g3(),-e3(),-rho()));
 				result -=strike()*std::exp(-riskFreeRate()*residualTime())*(M(g2(),e2(),rho())-HS(underlying(),barrier(),2*mu())*M(g4(),-e4(),-rho()));
 				return result;break;
-			case PartialBarrier::UpOutEndB2:
+			case PartialBarrier::Type::UpOut:
 				result = underlying()*std::exp((b-riskFreeRate())*residualTime());
 				result *=(M(-g1(),-e1(),rho())-HS(underlying(),barrier(),2*(mu()+1))*M(-g3(),e3(),-rho()));
 				result -=strike()*std::exp(-riskFreeRate()*residualTime())*(M(-g2(),-e2(),rho())-HS(underlying(),barrier(),2*mu())*M(-g4(),e4(),-rho()));
@@ -228,7 +248,7 @@ namespace QuantLib {
 		Real _underlying = underlying();
 		Real _volatility = volatility(2);
 		Real _residualTime = residualTime();
-		return (std::log(_underlying / strike()) + 2 * std::log(barrier() / _underlying) + ((riskFreeRate()-dividendYield()) + (std::pow(_volatility, 2) / 2))*_residualTime) / (_volatility*SQRT(_residualTime));
+		return (std::log(_underlying / strike()) + 2 * std::log(barrier() / _underlying) + ((riskFreeRate()-dividendYield()) + (std::pow(_volatility, 2) / 2))*_residualTime) / (_volatility*std::sqrt(_residualTime));
 	}
 
 	Real AnalyticPartialTimeBarrierEngine::f2() const{
@@ -253,71 +273,62 @@ namespace QuantLib {
 		Volatility vol = volatility(2);
 		Real b= riskFreeRate()-dividendYield();
 		Time T2=residualTime();
-		return (std::log(underlying()/strike())+(b+vol*vol/2)*T2)/(SQRT(T2)*vol);
+		return (std::log(underlying()/strike())+(b+vol*vol/2)*T2)/(std::sqrt(T2)*vol);
 	}
-	
+
 	Real AnalyticPartialTimeBarrierEngine::d2()const{
 		Volatility vol = volatility(2);
 		Time T2=residualTime();
-		return d1() - vol*SQRT(T2);
+		return d1() - vol*std::sqrt(T2);
 	}
 
 	Real AnalyticPartialTimeBarrierEngine::e1()const{
 		Volatility vol = volatility(1);
 		Real b= riskFreeRate()-dividendYield();
 		Time T1=coverEventTime();
-		return (LOG(underlying()/barrier())+(b+vol*vol/2)*T1)/(SQRT(T1)*vol);
+		return (std::log(underlying()/barrier())+(b+vol*vol/2)*T1)/(std::sqrt(T1)*vol);
 	}
-	
+
 	Real AnalyticPartialTimeBarrierEngine::e2()const{
 		Volatility vol = volatility(1);
 		Time T1=coverEventTime();
-		return e1() - vol*SQRT(T1);
+		return e1() - vol*std::sqrt(T1);
 	}
 
 	Real AnalyticPartialTimeBarrierEngine::e3()const{
 		Time T1=coverEventTime();
 		Real vol=volatility(1);
-		return e1()+(2*LOG(barrier()/underlying()) /(vol*SQRT(T1)));
+		return e1()+(2*std::log(barrier()/underlying()) /(vol*std::sqrt(T1)));
 	}
 
 	Real AnalyticPartialTimeBarrierEngine::e4()const{
-		return e3()-volatility(1)*SQRT(coverEventTime());
+		return e3()-volatility(1)*std::sqrt(coverEventTime());
 	}
 
 	Real AnalyticPartialTimeBarrierEngine::g1()const{
 		Volatility vol = volatility(2);
 		Real b= riskFreeRate()-dividendYield();
 		Time T2=residualTime();
-		return (LOG(underlying()/barrier())+(b+vol*vol/2)*T2)/(SQRT(T2)*vol);
+		return (std::log(underlying()/barrier())+(b+vol*vol/2)*T2)/(std::sqrt(T2)*vol);
 	}
-	
+
 	Real AnalyticPartialTimeBarrierEngine::g2()const{
 		Volatility vol = volatility(2);
 		Time T2=residualTime();
-		return g1() - vol*SQRT(T2);
+		return g1() - vol*std::sqrt(T2);
 	}
-	
+
 	Real AnalyticPartialTimeBarrierEngine::g3()const{
 		Time T2=residualTime();
 		Real vol=volatility(2);
-		return g1()+(2*LOG(barrier()/underlying()) /(vol*SQRT(T2)));
+		return g1()+(2*std::log(barrier()/underlying()) /(vol*std::sqrt(T2)));
 	}
-	
+
 	Real AnalyticPartialTimeBarrierEngine::g4()const{
 		Time T2=residualTime();
 		Real vol=volatility(2);
-		return g3()-vol*SQRT(T2);
+		return g3()-vol*std::sqrt(T2);
 	}
-	
-	Real AnalyticPartialTimeBarrierEngine::LOG(Real r) const{
-		return std::log(r);
-	}
-	
-	Real AnalyticPartialTimeBarrierEngine::SQRT(Real r) const{
-		return std::sqrt(r);
-	}
-	
 	Real AnalyticPartialTimeBarrierEngine::HS(Real S, Real H, Real power) const{
 		return std::pow((H/S),power);
 	}

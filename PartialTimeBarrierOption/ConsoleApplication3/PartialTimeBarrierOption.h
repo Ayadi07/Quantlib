@@ -5,14 +5,18 @@
 namespace QuantLib {
 	struct PartialBarrier:public Barrier
 	{
-		enum Type { DownInStart, DownInEnd, UpInStart, UpInEnd, DownOutStart,DownOutEndB1, DownOutEndB2, UpOutStart,UpOutEndB1,UpOutEndB2 };
+		
+		enum Range { Start, End, EndB1,EndB2};
 	};
+
 	class GeneralizedBlackScholesProcess;
 	class PartialTimeBarrierOption : public OneAssetOption {
 	public:
 		class arguments;
 		class engine;
+		//PartialTimeBarrierOption(PartialBarrier::Type barrierType,
 		PartialTimeBarrierOption(PartialBarrier::Type barrierType,
+			PartialBarrier::Range barrierRange,
 			Real barrier,
 			Real rebate,
 			Date coverEventDate,
@@ -21,6 +25,7 @@ namespace QuantLib {
 		void setupArguments(PricingEngine::arguments*) const;
 	protected:
 		PartialBarrier::Type barrierType_;
+		PartialBarrier::Range barrierRange_;
 		Real barrier_;
 		Real rebate_;
 		Date coverEventDate_;
@@ -31,6 +36,7 @@ namespace QuantLib {
 	public:
 		arguments();
 		PartialBarrier::Type barrierType;
+		PartialBarrier::Range barrierRange;
 		Real barrier;
 		Real rebate;
 		Date coverEventDate;

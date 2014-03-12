@@ -18,14 +18,14 @@ int main(int, char*[])
 	Date settlementDate(8, January, 2014);
 	Date maturity(settlementDate + 360);
 	DayCounter dayCounter = Actual360();
-		
+
 	std::vector<Date> v_coverEventTime;
 	//v_coverEventTime.push_back(settlementDate + 0);
 	v_coverEventTime.push_back(settlementDate + 90);
 	v_coverEventTime.push_back(settlementDate + 180);
 	v_coverEventTime.push_back(settlementDate + 270);
 	//v_coverEventTime.push_back(settlementDate + 360);
-	
+
 	Real u1 = 95;
 	Real u2 = 105;
 	std::vector<Real> v_underlying;
@@ -41,7 +41,7 @@ int main(int, char*[])
 	v_strike.push_back(s2);
 	v_strike.push_back(s1);
 	v_strike.push_back(s2);
-	
+
 	std::vector<Real> values;
 
 	Option::Type type(Option::Call);
@@ -54,11 +54,12 @@ int main(int, char*[])
 	std::cout<<"Volatility : " << volatility << std::endl << "Settlement date : " << settlementDate << "   Maturity date : " << maturity <<std::endl << std::endl;
 	for(int i=0; i<v_strike.size(); i++){
 		for(int j=0; j<v_coverEventTime.size(); j++){
-			
+
 			//basic option
 			boost::shared_ptr<StrikedTypePayoff> payoff(new PlainVanillaPayoff(type, v_strike[i]));
 			boost::shared_ptr<Exercise> europeanExercise(new EuropeanExercise(maturity));
-			PartialTimeBarrierOption partialTimeBarrierOption(PartialBarrier::Type::DownOutEndB1,
+			PartialTimeBarrierOption partialTimeBarrierOption(PartialBarrier::Type::DownOut,
+				PartialBarrier::Range::EndB1,
 				100.0,
 				0.0,
 				v_coverEventTime[j],
