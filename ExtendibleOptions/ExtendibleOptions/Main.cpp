@@ -32,8 +32,21 @@ int main(int, char*[])
 	Real dividendYield = 0.0;
 	Real volatility = 0.25;
 
+	std::cout << "------------------------------------------------" << std::endl;
+	std::cout << "S: " << underlying << std::endl;
+	std::cout << "Strike: " << underlying << std::endl;
+	std::cout << "Extendible strike: " << secondStrike << std::endl;
+	std::cout << "Premium: " << premium << std::endl;
+	std::cout << "t1: " << maturity << std::endl;
+	std::cout << "T2: " << secondExpiryDate << std::endl;
+	std::cout << "Free rate: " << riskFreeRate << std::endl;
+	std::cout << "Volatility: " << riskFreeRate << std::endl;
+
+
+
+
 	ExtendibleOption extendedHolderCall(Option::Type::Call, 
-		ExtendibleOptionType::Type::H, 
+		ExtendibleOption::Type::Holder,
 		premium, 
 		secondExpiryDate, 
 		secondStrike,

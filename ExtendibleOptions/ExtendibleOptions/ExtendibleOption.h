@@ -5,19 +5,16 @@
 #include <ql/errors.hpp>
 
 namespace QuantLib{
-	struct ExtendibleOptionType
-	{
-		enum Type { W, H};
-	};
 	class GeneralizedBlackScholesProcess;
 	class ExtendibleOption:public OneAssetOption
 	{
 	public:
+		enum Type { Writer, Holder };
 		class arguments;
 		class engine;	
 		ExtendibleOption(
 			Option::Type type,
-			ExtendibleOptionType::Type writerHolder,
+			ExtendibleOption::Type writerHolder,
 			Real premium,
 			Date secondExpiryDate,
 			Real secondStrike,
@@ -26,7 +23,7 @@ namespace QuantLib{
 		~ExtendibleOption(void);
 		void setupArguments(PricingEngine::arguments*) const;
 	protected:
-		ExtendibleOptionType::Type writerHolder_;
+		ExtendibleOption::Type writerHolder_;
 		Real premium_;
 		Date secondExpiryDate_;
 		Real secondStrike_;
@@ -34,7 +31,7 @@ namespace QuantLib{
 	class ExtendibleOption::arguments : public OneAssetOption::arguments {
 	public:
 		//arguments();
-		ExtendibleOptionType::Type writerHolder;
+		ExtendibleOption::Type writerHolder;
 		Real premium;
 		Date secondExpiryDate;
 		Real secondStrike;

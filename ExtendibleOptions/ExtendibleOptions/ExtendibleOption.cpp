@@ -3,7 +3,7 @@
 
 namespace QuantLib {
 	ExtendibleOption::ExtendibleOption(Option::Type type,
-		ExtendibleOptionType::Type writerHolder,
+		ExtendibleOption::Type writerHolder,
 		Real premium,
 		Date secondExpiryDate,
 		Real secondStrike,

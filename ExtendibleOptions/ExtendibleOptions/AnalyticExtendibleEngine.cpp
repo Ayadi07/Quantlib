@@ -50,7 +50,7 @@ namespace QuantLib {
 		Real result = 0;
 		Real minusInf=-std::numeric_limits<Real>::infinity();
 
-		if(arguments_.writerHolder==ExtendibleOptionType::H){
+		if (arguments_.writerHolder == ExtendibleOption::Type::Holder){
 			Real y1,y2;
 			if (payoff->optionType() == Option::Type::Call)
 			{
@@ -363,9 +363,6 @@ namespace QuantLib {
 		Real I1;
 		if (type == Option::Type::Call){
 			I1 = I1Call();
-			//Error I1
-			//std::cout << "\t\tI1 : " << I1 << std::endl;
-			I1 = 86.7406;
 		}
 		else
 			I1 = I1Put();
