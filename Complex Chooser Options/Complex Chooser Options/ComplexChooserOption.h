@@ -15,9 +15,7 @@ namespace QuantLib{
 			Real strikeCall,
 			Real strikePut,
 			const boost::shared_ptr<Exercise>& exerciseCall,
-			const boost::shared_ptr<StrikedTypePayoff>& payoffCall,
-			const boost::shared_ptr<Exercise>& exercisePut,
-			const boost::shared_ptr<StrikedTypePayoff>& payoffPut);
+			const boost::shared_ptr<Exercise>& exercisePut);
 		void setupArguments(PricingEngine::arguments*) const;
 
 	protected:

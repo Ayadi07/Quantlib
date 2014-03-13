@@ -9,13 +9,11 @@ namespace QuantLib {
 	public:
 		AnalyticComplexChooserEngine(
 			const boost::shared_ptr<GeneralizedBlackScholesProcess>& process);
-		~AnalyticComplexChooserEngine();
 		void calculate() const;
 
 	private:
 
 		boost::shared_ptr<GeneralizedBlackScholesProcess> process_;
-		//Real underlying() const;
 		Real strike(Option::Type optionType) const;
 		Time choosingDate() const;
 		Time putMaturity() const;

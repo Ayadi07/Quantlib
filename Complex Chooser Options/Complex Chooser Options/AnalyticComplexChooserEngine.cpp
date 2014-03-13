@@ -12,12 +12,6 @@ namespace QuantLib {
 			registerWith(process_);
 	}
 
-
-	AnalyticComplexChooserEngine::~AnalyticComplexChooserEngine()
-	{
-		unregisterWithAll();
-	}
-
 	void AnalyticComplexChooserEngine::calculate() const {
 		results_.value=ComplexChooser();
 	}
@@ -35,7 +29,6 @@ namespace QuantLib {
 
 		Real i = CriticalValueChooser();
 		std::cout << "Critical value :" << i << std::endl;
-		i = 51.1158;
 
 		b=riskFreeRate(choosingDate()) - dividendYield(choosingDate());
 		v = volatility(T);
@@ -141,10 +134,6 @@ namespace QuantLib {
 		return Sv;
 	}
 
-	//Real AnalyticComplexChooserEngine::underlying() const {
-	//return process_->x0();
-	//}
-
 
 	Real AnalyticComplexChooserEngine::strike(Option::Type optionType) const {
 		if (optionType == Option::Type::Call)
@@ -163,7 +152,6 @@ namespace QuantLib {
 		return process_->time(arguments_.exerciseCall->lastDate());
 	}
 
-	//Je ne sais pas pour le strike et je ne sais pas si il faut utiliser cette volatility dans GBlackScholes
 	Volatility AnalyticComplexChooserEngine::volatility(Time t) const {
 		return process_->blackVolatility()->blackVol(t, arguments_.strikeCall);
 	}

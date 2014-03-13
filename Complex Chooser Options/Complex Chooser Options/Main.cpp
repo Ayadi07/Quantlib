@@ -35,14 +35,12 @@ int main(int, char*[])
 	Volatility volatility = 0.35;
 
 	//basic option Call
-	boost::shared_ptr<StrikedTypePayoff> payoffCall(new PlainVanillaPayoff(Option::Call, strikeCall));
 	boost::shared_ptr<Exercise> exerciseCall(new EuropeanExercise(maturityCall));
 
 	//basic option Put
-	boost::shared_ptr<StrikedTypePayoff> payoffPut(new PlainVanillaPayoff(Option::Put, strikePut));
 	boost::shared_ptr<Exercise> exercisePut(new EuropeanExercise(maturityPut));
 
-	ComplexChooserOption complexChooserOption(choosingDate, strikeCall, strikePut, exerciseCall, payoffCall, exercisePut, payoffPut);
+	ComplexChooserOption complexChooserOption(choosingDate, strikeCall, strikePut, exerciseCall, exercisePut);
 
 	//Handle setups
 	Handle<Quote> underlyingH(boost::shared_ptr<Quote>(new SimpleQuote(underlying)));

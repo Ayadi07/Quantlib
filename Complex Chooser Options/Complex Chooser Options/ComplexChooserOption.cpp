@@ -9,22 +9,16 @@ namespace QuantLib {
 		Real strikeCall,
 		Real strikePut,
 		const boost::shared_ptr<Exercise>& exerciseCall,
-		const boost::shared_ptr<StrikedTypePayoff>& payoffCall,
-		const boost::shared_ptr<Exercise>& exercisePut,
-		const boost::shared_ptr<StrikedTypePayoff>& payoffPut)
-		:OneAssetOption(payoffCall, exerciseCall),
+		const boost::shared_ptr<Exercise>& exercisePut)
+		:OneAssetOption(boost::shared_ptr<Payoff>(
+		new PlainVanillaPayoff(Option::Call, strikeCall)), exerciseCall),
 		choosingDate_(choosingDate),
 		strikeCall_(strikeCall),
 		strikePut_(strikePut),
 		exerciseCall_(exerciseCall),
 		exercisePut_(exercisePut)
 	{}
-	//Attention OneAssetOption(boost::shared_ptr<Payoff>(new PlainVanillaPayoff(Option::Call, strikeCall)),exerciseCall)
-	//On a deux strike (call/put) il nous faut une solution pour ca
-	//Je n'ai pas pu definir le constructeur de notre classe sans 
-	//:OneAssetOption(boost::shared_ptr<Payoff>(
-	//new PlainVanillaPayoff(Option::Call, strikeCall)),exerciseCall),
-	//any ideas guys?
+
 	void ComplexChooserOption::setupArguments(PricingEngine::arguments* args) const {
 			OneAssetOption::setupArguments(args);
 			ComplexChooserOption::arguments* moreArgs =
